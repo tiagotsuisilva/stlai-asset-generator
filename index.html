@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STLAI Asset Generator</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ========================== HEADER ========================== -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 28 28">
+          <defs>
+            <linearGradient id="brand-grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#5468FF"/>
+              <stop offset="100%" stop-color="#C770A8"/>
+            </linearGradient>
+          </defs>
+          <rect width="28" height="28" rx="7" fill="url(#brand-grad)"/>
+          <text x="14" y="19" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="700" fill="#fff">S</text>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <div class="brand-name">STLAI</div>
+        <div class="brand-tagline">Asset Generator</div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <span id="mock-badge" class="mock-badge" hidden>MODO MOCK</span>
+      <button id="btn-settings" class="icon-btn" title="Configurações">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================== MAIN ============================= -->
+  <main class="app-main">
+
+    <!-- ========== TELA 1 — HOME ========== -->
+    <section id="screen-home" class="screen screen-active">
+      <div class="home">
+
+        <!-- LADO ESQUERDO -->
+        <div class="home-col home-col-left">
+          <div class="home-col-header">
+            <h2>Com upload</h2>
+            <p>Para fluxos que usam imagem de referência</p>
+          </div>
+
+          <!-- Preview do upload -->
+          <div class="upload-preview" id="upload-preview">
+            <div class="upload-preview-empty">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+              <span>Pré-visualização da imagem</span>
+            </div>
+          </div>
+
+          <label for="file-input" class="btn btn-upload" id="btn-upload">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            <span>UPLOAD</span>
+          </label>
+          <input type="file" id="file-input" accept="image/*" hidden />
+
+          <textarea
+            id="bloco-extra"
+            class="input bloco-extra"
+            placeholder="Instruções adicionais (opcional) — ex: pose com mãos levantadas, expressão de surpresa..."
+            rows="3"
+          ></textarea>
+
+          <button type="button" class="btn btn-primary" id="btn-bib-a-fluxo1" disabled>
+            <span class="btn-title">Biblioteca A</span>
+            <span class="btn-subtitle">Fluxo 1 — Personagem 3D</span>
+          </button>
+
+          <button type="button" class="btn btn-primary" id="btn-bib-b-fluxo3" disabled>
+            <span class="btn-title">Biblioteca B</span>
+            <span class="btn-subtitle">Fluxo 3 — SVG textual</span>
+          </button>
+        </div>
+
+        <!-- DIVISOR -->
+        <div class="home-divider" aria-hidden="true"></div>
+
+        <!-- LADO DIREITO -->
+        <div class="home-col home-col-right">
+          <div class="home-col-header">
+            <h2>Apenas prompt</h2>
+            <p>Para gerar SVG estilizado a partir da Biblioteca A</p>
+          </div>
+
+          <textarea
+            id="prompt-fluxo2"
+            class="input prompt-fluxo2"
+            placeholder="Cole aqui o prompt que define o estilo do SVG. Ex: outline em traços finos, fundo transparente, paleta azul-magenta, formato collectible..."
+            rows="14"
+          ></textarea>
+
+          <button type="button" class="btn btn-primary" id="btn-bib-a-fluxo2" disabled>
+            <span class="btn-title">Biblioteca A</span>
+            <span class="btn-subtitle">Fluxo 2 — SVG por imagem</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========== TELA 2 — BIBLIOTECA (compartilhada) ========== -->
+    <section id="screen-biblioteca" class="screen">
+      <div class="screen-header">
+        <button class="btn btn-ghost" data-action="back-home">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+          </svg>
+          Voltar
+        </button>
+        <div>
+          <h1 id="biblioteca-title">Biblioteca</h1>
+          <p id="biblioteca-subtitle" class="screen-subtitle"></p>
+        </div>
+        <div class="counter">
+          <span id="biblioteca-counter">0</span> de <span id="biblioteca-max">20</span> selecionados
+        </div>
+      </div>
+
+      <div class="grid" id="biblioteca-grid"></div>
+
+      <div class="screen-footer">
+        <button id="btn-gerar" class="btn btn-primary btn-cta" disabled>
+          <span class="btn-title">Gerar imagens</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ========== TELA 3 — PREVIEW (Fluxo 1) ========== -->
+    <section id="screen-preview" class="screen">
+      <div class="screen-header">
+        <button class="btn btn-ghost" data-action="back-home">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+          </svg>
+          Voltar
+        </button>
+        <div>
+          <h1>Preview das imagens geradas</h1>
+          <p class="screen-subtitle">Selecione as imagens que vão para a Tripo (geração 3D).</p>
+        </div>
+        <div class="counter">
+          <span id="preview-counter">0</span> selecionadas
+        </div>
+      </div>
+
+      <div class="grid" id="preview-grid"></div>
+
+      <div class="screen-footer">
+        <button id="btn-avancar-tripo" class="btn btn-primary btn-cta" disabled>
+          <span class="btn-title">Avançar para 3D</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ========== TELA 4 — CONFIG TRIPO (Fluxo 1) ========== -->
+    <section id="screen-tripo" class="screen">
+      <div class="screen-header">
+        <button class="btn btn-ghost" data-action="back-preview">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+          </svg>
+          Voltar
+        </button>
+        <div>
+          <h1>Configuração 3D</h1>
+          <p class="screen-subtitle">Parâmetros da Tripo para a geração dos modelos 3D.</p>
+        </div>
+        <div></div>
+      </div>
+
+      <div class="tripo-grid">
+        <aside class="tripo-list">
+          <h3>Imagens selecionadas</h3>
+          <ul id="tripo-list"></ul>
+        </aside>
+
+        <div class="tripo-form card">
+          <div class="form-row">
+            <label for="tripo-versao">Versão do Modelo</label>
+            <select id="tripo-versao" class="input">
+              <option value="standard">Standard</option>
+              <option value="pro">Pro</option>
+              <option value="ultra">Ultra</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label>Mesh Resolution</label>
+            <div class="toggle-group">
+              <button type="button" class="toggle active" data-mesh="standard">Standard</button>
+              <button type="button" class="toggle" data-mesh="ultra">Ultra</button>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label for="tripo-polycount">Polycount</label>
+            <div class="slider-row">
+              <input type="range" id="tripo-polycount" min="5000" max="100000" value="20000" step="1000" />
+              <span id="tripo-polycount-value">20.000</span>
+              <label class="checkbox-inline">
+                <input type="checkbox" id="tripo-polycount-auto" />
+                Auto
+              </label>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label for="tripo-formato">Formato de saída</label>
+            <select id="tripo-formato" class="input">
+              <option value="GLB">GLB</option>
+              <option value="OBJ">OBJ</option>
+              <option value="FBX">FBX</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label for="tripo-nome">Nome do arquivo</label>
+            <input type="text" id="tripo-nome" class="input" value="personagem" />
+          </div>
+
+          <div class="form-actions">
+            <button id="btn-tripo-limpar" class="btn btn-secondary">Limpar</button>
+            <button id="btn-tripo-gerar" class="btn btn-primary">Gerar 3D</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== TELA 5 — LOADING ========== -->
+    <section id="screen-loading" class="screen">
+      <div class="loading-card card">
+        <div class="loading-spinner"></div>
+        <h2 id="loading-title">Gerando...</h2>
+        <p id="loading-subtitle" class="screen-subtitle">Aguarde enquanto processamos as imagens.</p>
+        <div class="progress-bar">
+          <div id="progress-bar-fill" class="progress-bar-fill"></div>
+        </div>
+        <p id="loading-progress" class="loading-progress">0 de 0</p>
+      </div>
+    </section>
+
+    <!-- ========== TELA 6 — RESULTADO ========== -->
+    <section id="screen-result" class="screen">
+      <div class="screen-header">
+        <button class="btn btn-ghost" data-action="back-home">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+          </svg>
+          Voltar para a Home
+        </button>
+        <div>
+          <h1>Geração concluída</h1>
+          <p class="screen-subtitle" id="result-subtitle">Seus arquivos estão prontos para download.</p>
+        </div>
+        <div></div>
+      </div>
+
+      <div class="grid" id="result-grid"></div>
+
+      <div class="screen-footer">
+        <button id="btn-download-zip" class="btn btn-primary btn-cta">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span class="btn-title">Download ZIP</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================== TOAST ========================== -->
+  <div id="toast" class="toast"></div>
+
+  <!-- ========================== SETTINGS MODAL ========================== -->
+  <div id="settings-modal" class="modal" hidden>
+    <div class="modal-backdrop" data-action="close-settings"></div>
+    <div class="modal-content card">
+      <div class="modal-header">
+        <h2>Configurações de API</h2>
+        <button class="icon-btn" data-action="close-settings" title="Fechar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <p class="modal-hint">
+        As chaves ficam salvas localmente neste navegador (localStorage).
+        Sem chave configurada, o app roda em <strong>modo Mock</strong> com dados de demonstração.
+      </p>
+
+      <div class="form-row">
+        <label for="cfg-openai-key">OpenAI API Key</label>
+        <input type="password" id="cfg-openai-key" class="input" placeholder="sk-..." />
+      </div>
+
+      <div class="form-row">
+        <label for="cfg-openai-model">OpenAI Image Model</label>
+        <input type="text" id="cfg-openai-model" class="input" placeholder="gpt-image-2" />
+        <small class="form-help">Confirme o nome exato na documentação atual da OpenAI.</small>
+      </div>
+
+      <div class="form-row">
+        <label for="cfg-tripo-key">Tripo API Key</label>
+        <input type="password" id="cfg-tripo-key" class="input" placeholder="..." />
+      </div>
+
+      <div class="form-row">
+        <label class="checkbox-row">
+          <input type="checkbox" id="cfg-mock-mode" />
+          <span>Forçar modo Mock (mesmo com chaves configuradas)</span>
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-secondary" data-action="close-settings">Cancelar</button>
+        <button id="btn-save-settings" class="btn btn-primary">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================== EXTERNAL LIBS ========================== -->
+  <!-- JSZip — empacotamento dos outputs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <!-- ImageTracer — conversão raster → SVG -->
+  <script src="https://cdn.jsdelivr.net/gh/jankovicsandras/imagetracerjs@1.2.6/imagetracer_v1.2.6.js"></script>
+
+  <!-- ========================== APP ========================== -->
+  <script src="js/config.js"></script>
+  <script src="js/prompts.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+</body>
+</html>

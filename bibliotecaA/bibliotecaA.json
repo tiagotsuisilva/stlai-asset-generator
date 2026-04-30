@@ -1,0 +1,51 @@
+[
+  {
+    "id": "drago_lava",
+    "nome": "Dragão de Fogo",
+    "categoria": "criatura_fantastica",
+    "arquivo": "bibliotecaA/drago_lava.jpg",
+    "descricao": "Dragão sentado com escamas pretas e veias incandescentes."
+  },
+  {
+    "id": "husky",
+    "nome": "Husky",
+    "categoria": "animal_real",
+    "arquivo": "bibliotecaA/husky.jpg",
+    "descricao": "Husky marrom e branco sentado em fundo neutro."
+  },
+  {
+    "id": "gato_malhado",
+    "nome": "Gato Malhado",
+    "categoria": "animal_real",
+    "arquivo": "bibliotecaA/gato_malhado.jpg",
+    "descricao": "Gato malhado preto, cinza e branco, sentado de frente."
+  },
+  {
+    "id": "mulher_asiatica_mechas_verdes",
+    "nome": "Mulher com Mechas Verdes",
+    "categoria": "humano",
+    "arquivo": "bibliotecaA/mulher_asiatica_mechas_verdes.jpg",
+    "descricao": "Mulher de cabelo longo escuro com mechas verdes, camiseta STLFLIX."
+  },
+  {
+    "id": "mulher_castanha_piercing",
+    "nome": "Mulher Castanha com Piercing",
+    "categoria": "humano",
+    "arquivo": "bibliotecaA/mulher_castanha_piercing.jpg",
+    "descricao": "Mulher castanha sorridente com piercing, camiseta STLFLIX."
+  },
+  {
+    "id": "homem_careca_barba_ruiva",
+    "nome": "Homem Careca com Barba Ruiva",
+    "categoria": "humano",
+    "arquivo": "bibliotecaA/homem_careca_barba_ruiva.jpg",
+    "descricao": "Homem careca de barba ruiva, sorridente, camiseta STLFLIX."
+  },
+  {
+    "id": "homem_cabelo_curto_barba",
+    "nome": "Homem Cabelo Curto com Barba",
+    "categoria": "humano",
+    "arquivo": "bibliotecaA/homem_cabelo_curto_barba.jpg",
+    "descricao": "Homem de cabelo curto e barba, leve sorriso, camiseta STLFLIX."
+  }
+]

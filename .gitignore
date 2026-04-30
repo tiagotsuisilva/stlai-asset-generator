@@ -1,0 +1,17 @@
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+.idea/
+*.swp
+
+# Node (caso seja necessário no futuro)
+node_modules/
+
+# Outputs locais (ZIPs gerados durante testes)
+outputs-locais/
+*.zip
+
+# NOTA: As API keys ficam no localStorage 

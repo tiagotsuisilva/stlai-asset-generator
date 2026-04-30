@@ -1,0 +1,68 @@
+[
+  {
+    "id": "birthday_gift",
+    "nome": "Birthday Gift",
+    "categoria": "gift",
+    "arquivo": "bibliotecaB/birthday_gift.jpg"
+  },
+  {
+    "id": "holiday_gift",
+    "nome": "Holiday Gift",
+    "categoria": "gift",
+    "arquivo": "bibliotecaB/holiday_gift.jpg"
+  },
+  {
+    "id": "festival_gift",
+    "nome": "Festival Gift",
+    "categoria": "gift",
+    "arquivo": "bibliotecaB/festival_gift.jpg"
+  },
+  {
+    "id": "freebie_gift",
+    "nome": "Freebie Gift",
+    "categoria": "gift",
+    "arquivo": "bibliotecaB/freebie_gift.jpg"
+  },
+  {
+    "id": "friendship_gift",
+    "nome": "Friendship Gift",
+    "categoria": "gift",
+    "arquivo": "bibliotecaB/friendship_gift.jpg"
+  },
+  {
+    "id": "corporative_gift",
+    "nome": "Corporative Gift",
+    "categoria": "gift",
+    "arquivo": "bibliotecaB/corporative_gift.jpg"
+  },
+  {
+    "id": "your_quote",
+    "nome": "Your Quote",
+    "categoria": "your",
+    "arquivo": "bibliotecaB/your_quote.jpg"
+  },
+  {
+    "id": "your_pet",
+    "nome": "Your Pet",
+    "categoria": "your",
+    "arquivo": "bibliotecaB/your_pet.jpg"
+  },
+  {
+    "id": "your_photo",
+    "nome": "Your Photo",
+    "categoria": "your",
+    "arquivo": "bibliotecaB/your_photo.jpg"
+  },
+  {
+    "id": "your_logo",
+    "nome": "Your Logo",
+    "categoria": "your",
+    "arquivo": "bibliotecaB/your_logo.jpg"
+  },
+  {
+    "id": "your_hero",
+    "nome": "Your Hero",
+    "categoria": "your",
+    "arquivo": "bibliotecaB/your_hero.jpg"
+  }
+]

@@ -1,7 +1,11 @@
-# Handoff — Estado atual do projeto
+# Handoff — Estado atual do projeto (versão completa)
 
 > Atualizado em: 30/04/2026 (fim da sessão de deploy)
-> Próxima sessão: abrir conversa nova no Cowork e colar o prompt do final deste doc.
+> **Para retomar uma sessão rápido, lê primeiro [`HANDOFF_RESUMO.md`](./HANDOFF_RESUMO.md)** — este aqui é a versão longa, lida só quando precisar de contexto profundo.
+>
+> Fluxo de trabalho:
+> - **Planejamento**: ChatGPT — ver [`CHATGPT_INSTRUCTIONS.md`](./CHATGPT_INSTRUCTIONS.md).
+> - **Execução**: Claude Cowork — instruções permanentes em [`../CLAUDE.md`](../CLAUDE.md).
 
 ---
 

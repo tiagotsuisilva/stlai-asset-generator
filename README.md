@@ -5,6 +5,14 @@ HTML + CSS + JavaScript vanilla, sem backend, rodando localmente.
 
 > **Demo Day**: 08/05/2026.
 
+## Documentação do projeto
+
+- [`docs/HANDOFF_RESUMO.md`](docs/HANDOFF_RESUMO.md) — estado atual em 1 tela (lê primeiro a cada sessão nova).
+- [`docs/HANDOFF.md`](docs/HANDOFF.md) — handoff completo (lê só quando precisar de contexto profundo).
+- [`docs/PRD_STLAI_Asset_Generator.md`](docs/PRD_STLAI_Asset_Generator.md) — PRD v1.1 completo.
+- [`CLAUDE.md`](CLAUDE.md) — instruções permanentes pro Claude Cowork (execução).
+- [`docs/CHATGPT_INSTRUCTIONS.md`](docs/CHATGPT_INSTRUCTIONS.md) — instruções pro ChatGPT (planejamento).
+
 ---
 
 ## Como rodar

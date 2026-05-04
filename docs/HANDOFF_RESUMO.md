@@ -37,3 +37,25 @@ npx serve
 - **Planejamento e revisão**: ChatGPT (ver [`CHATGPT_INSTRUCTIONS.md`](./CHATGPT_INSTRUCTIONS.md)).
 - **Execução com arquivos / commits**: Claude Cowork (ver [`../CLAUDE.md`](../CLAUDE.md)).
 - **Memória entre sessões**: este arquivo + `HANDOFF.md`.
+
+---
+
+## Prompt de abertura — copiar e colar em conversa nova do Claude Cowork
+
+> Cola este bloco INTEIRO no Claude Cowork sempre que abrir uma sessão nova. Ele já dá o caminho da pasta, manda o Claude pedir acesso e ler os arquivos certos.
+
+```
+Estou continuando o projeto STLAI Asset Generator.
+
+Pasta local do projeto:
+C:\Users\tiago\Downloads\stlai-asset-generator\stlai-asset-generator
+
+Por favor:
+1. Pede acesso a essa pasta (use a ferramenta request_cowork_directory com esse caminho exato).
+2. Depois que a pasta estiver conectada, lê o `CLAUDE.md` na raiz dela.
+3. Lê também `docs/HANDOFF_RESUMO.md`.
+4. Só lê outros arquivos (HANDOFF.md, PRD, código) se a tarefa pedir contexto profundo — não leia "por garantia".
+5. Me diz em 2-3 linhas onde estamos e qual é a próxima tarefa lógica.
+```
+
+Pra tarefas específicas vindas do ChatGPT, use o prompt do **CHECKPOINT** entregue por ele em vez deste — esse é só pro caso de "abertura sem agenda".

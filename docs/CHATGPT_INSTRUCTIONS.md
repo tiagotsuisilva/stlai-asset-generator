@@ -42,7 +42,17 @@ Formato de CHECKPOINT (use exatamente este formato quando entregar algo executá
 
 **Prompt pra colar no Claude Cowork**:
 ```
-<texto que vai literalmente pro Claude — auto-suficiente, com caminhos absolutos e sem contexto faltando>
+Pasta local do projeto: C:\Users\tiago\Downloads\stlai-asset-generator\stlai-asset-generator
+
+Por favor:
+1. Se a pasta acima não estiver conectada à sessão, pede acesso a ela com request_cowork_directory.
+2. Lê `CLAUDE.md` (raiz) e `docs/HANDOFF_RESUMO.md` antes de começar.
+
+Tarefa: <descrição clara e auto-suficiente da tarefa, com caminhos absolutos>
+
+Critério de pronto: <critério objetivo>
+
+Ao terminar: atualiza `docs/HANDOFF_RESUMO.md` e me dá o bloco PowerShell pro commit.
 ```
 
 **Como saber que terminou**: <critério objetivo, ex: "novo arquivo X criado", "git push concluído sem erro", "URL pública carrega sem 404">
@@ -93,7 +103,17 @@ Estado atual rápido (atualize quando eu informar mudanças):
 >
 > **Prompt pra colar no Claude Cowork**:
 > ```
-> Lê `docs/HANDOFF_RESUMO.md` e depois lista os arquivos em `bibliotecaA/`. Renomeia os 7 .jpg "Generated Image April..." pros IDs corretos do `bibliotecaA.json` (drago_lava.jpg, husky.jpg, gato_malhado.jpg, mulher_asiatica_mechas_verdes.jpg, mulher_castanha_piercing.jpg, homem_careca_barba_ruiva.jpg, homem_cabelo_curto_barba.jpg). Pergunta antes de cada renomeação se não tiver certeza qual original vira qual. Ao terminar, atualiza o handoff e me dá o comando PowerShell pro commit.
+> Pasta local do projeto: C:\Users\tiago\Downloads\stlai-asset-generator\stlai-asset-generator
+>
+> Por favor:
+> 1. Se a pasta acima não estiver conectada à sessão, pede acesso a ela com request_cowork_directory.
+> 2. Lê `CLAUDE.md` (raiz) e `docs/HANDOFF_RESUMO.md` antes de começar.
+>
+> Tarefa: lista os arquivos em `bibliotecaA/` e renomeia os 7 .jpg "Generated Image April..." pros IDs corretos do `bibliotecaA.json` (drago_lava.jpg, husky.jpg, gato_malhado.jpg, mulher_asiatica_mechas_verdes.jpg, mulher_castanha_piercing.jpg, homem_careca_barba_ruiva.jpg, homem_cabelo_curto_barba.jpg). Pergunta antes de cada renomeação se não tiver certeza qual original vira qual.
+>
+> Critério de pronto: os 7 arquivos aparecem na pasta com os nomes corretos e o `git status` mostra os renomes detectados.
+>
+> Ao terminar: atualiza `docs/HANDOFF_RESUMO.md` e me dá o bloco PowerShell pro commit.
 > ```
 >
 > **Como saber que terminou**: Os 7 arquivos `.jpg` aparecem na pasta com os nomes corretos e o `git status` mostra os renomes detectados.

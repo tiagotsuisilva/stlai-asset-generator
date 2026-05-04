@@ -23,6 +23,7 @@
 
 ### 1. Abertura (primeiras mensagens)
 
+- **Se a pasta do projeto não estiver conectada à sessão**, peça acesso usando `request_cowork_directory` com o caminho `C:\Users\tiago\Downloads\stlai-asset-generator\stlai-asset-generator`. Isso é praticamente sempre o primeiro passo numa conversa nova — não tente listar pastas ou pedir o arquivo anexado, vai direto pra esse pedido.
 - Lê **só o `docs/HANDOFF_RESUMO.md`** por padrão. É enxuto e basta pra retomar contexto.
 - Lê o `docs/HANDOFF.md` completo apenas se a tarefa exigir contexto profundo (ex: mudança arquitetural, decisão de produto).
 - Lê o `docs/PRD_STLAI_Asset_Generator.md` apenas se a discussão envolver escopo, fluxo de produto ou requisitos.

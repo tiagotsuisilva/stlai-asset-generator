@@ -100,16 +100,24 @@ body::before {
   filter: blur(24px);
 }
 
-/* Container do goo trail interativo (água-viva). Inserido via JS. */
+/* Container do bg trail interativo (água-viva). Inserido via JS. */
 .goo-bg {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  mix-blend-mode: screen; /* deixa cores mais vivas sobre o fundo escuro */
+  mix-blend-mode: screen; /* soma luz sobre o fundo escuro */
+  filter: saturate(1.15);
+  opacity: 0.95;
 }
-.goo-bg svg { width: 100%; height: 100%; display: block; }
+.goo-bg svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  /* leve blur extra pra reforçar o look difuso/etéreo */
+  filter: blur(8px);
+}
 
 .app-header, .app-main, #toast, .modal { position: relative; z-index: 1; }
 

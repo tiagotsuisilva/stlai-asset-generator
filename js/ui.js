@@ -8,6 +8,7 @@
 const appState = {
   currentScreen: 'home',
   currentFlow: null,        // 'fluxo1' | 'fluxo2' | 'fluxo3'
+  currentFlowScreen: null,  // 'flow-3d' | 'flow-2d' — origem do fluxo ativo (pra "Voltar")
 
   uploadedImage: null,      // { dataUrl, name, file }
   blocoExtra: '',
@@ -38,17 +39,67 @@ window.appState = appState;
 
 document.addEventListener('DOMContentLoaded', async () => {
   bindGlobalEvents();
+  bindLandingEvents();
   bindHomeEvents();
   bindBibliotecaEvents();
   bindPreviewEvents();
   bindTripoEvents();
   bindResultEvents();
   bindSettingsEvents();
+  initBackgroundSpotlight();
 
   await carregarBibliotecas();
   atualizarMockBadge();
   atualizarBotoesHome();
 });
+
+
+/* ===== BACKGROUND INTERATIVO ============================ */
+// Atualiza CSS vars --mx / --my no <body> conforme o cursor.
+// Usa rAF + throttle pra não pesar; ignora em telas pequenas.
+function initBackgroundSpotlight() {
+  if (window.matchMedia('(max-width: 880px)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  let pendingX = 50, pendingY = 30;
+  let scheduled = false;
+
+  function schedule() {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(() => {
+      document.body.style.setProperty('--mx', pendingX + '%');
+      document.body.style.setProperty('--my', pendingY + '%');
+      scheduled = false;
+    });
+  }
+
+  window.addEventListener('mousemove', (e) => {
+    pendingX = (e.clientX / window.innerWidth) * 100;
+    pendingY = (e.clientY / window.innerHeight) * 100;
+    schedule();
+  }, { passive: true });
+}
+
+
+/* ===== LANDING (Tela 0) ================================== */
+
+function bindLandingEvents() {
+  document.querySelectorAll('[data-action="goto-flow-3d"]').forEach(btn => {
+    btn.addEventListener('click', () => abrirFlowScreen('flow-3d'));
+  });
+  document.querySelectorAll('[data-action="goto-flow-2d"]').forEach(btn => {
+    btn.addEventListener('click', () => abrirFlowScreen('flow-2d'));
+  });
+  document.querySelectorAll('[data-action="back-landing"]').forEach(btn => {
+    btn.addEventListener('click', () => showScreen('home'));
+  });
+}
+
+function abrirFlowScreen(which) {
+  appState.currentFlowScreen = which;
+  showScreen(which);
+}
 
 
 /* ===== UTIL — TELAS / TOAST ============================== */
@@ -120,9 +171,12 @@ function bindHomeEvents() {
   document.getElementById('btn-bib-a-fluxo2').addEventListener('click', () => iniciarFluxo('fluxo2'));
   document.getElementById('btn-bib-b-fluxo3').addEventListener('click', () => iniciarFluxo('fluxo3'));
 
-  // Voltar para a Home
+  // Voltar para a tela do fluxo de origem (ou landing como fallback)
   document.querySelectorAll('[data-action="back-home"]').forEach(btn => {
-    btn.addEventListener('click', () => showScreen('home'));
+    btn.addEventListener('click', () => {
+      const target = appState.currentFlowScreen || 'home';
+      showScreen(target);
+    });
   });
 }
 
@@ -261,7 +315,7 @@ async function executarGeracao() {
   } catch (e) {
     console.error(e);
     showToast(`Erro na geração: ${e.message}`, 'error');
-    showScreen('home');
+    showScreen(appState.currentFlowScreen || 'home');
   }
 }
 

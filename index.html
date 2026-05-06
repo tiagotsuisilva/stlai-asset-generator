@@ -46,17 +46,68 @@
   <!-- ========================== MAIN ============================= -->
   <main class="app-main">
 
-    <!-- ========== TELA 1 — HOME ========== -->
+    <!-- ========== TELA 1 — LANDING ========== -->
     <section id="screen-home" class="screen screen-active">
-      <div class="home">
+      <div class="landing">
+        <div class="landing-hero">
+          <span class="landing-eyebrow">STLAI Asset Generator</span>
+          <h1 class="landing-title">Crie personagens em 3D ou 2D em minutos.</h1>
+          <p class="landing-subtitle">
+            Escolha um fluxo para começar. Importa uma referência ou descreve o estilo —
+            o STLAI cuida da geração e te entrega os assets prontos pra produção.
+          </p>
+        </div>
 
-        <!-- LADO ESQUERDO -->
-        <div class="home-col home-col-left">
-          <div class="home-col-header">
-            <h2>Com upload</h2>
-            <p>Para fluxos que usam imagem de referência</p>
+        <div class="landing-buttons">
+          <button type="button" class="flow-card" data-flow="3d" data-action="goto-flow-3d">
+            <span class="flow-card-tag">Fluxo com upload</span>
+            <span class="flow-card-title">3D Character Flow</span>
+            <span class="flow-card-desc">
+              Sobe uma imagem de referência, escolhe na biblioteca e gera modelos 3D pela Tripo.
+            </span>
+            <span class="flow-card-arrow">
+              Iniciar
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </span>
+          </button>
+
+          <button type="button" class="flow-card" data-flow="2d" data-action="goto-flow-2d">
+            <span class="flow-card-tag">Fluxo só com prompt</span>
+            <span class="flow-card-title">2D Character Flow</span>
+            <span class="flow-card-desc">
+              Descreve o estilo desejado e gera SVGs estilizados a partir da Biblioteca A.
+            </span>
+            <span class="flow-card-arrow">
+              Iniciar
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== TELA 1A — FLUXO 3D ========== -->
+    <section id="screen-flow-3d" class="screen">
+      <div class="flow-screen">
+        <div class="flow-screen-header">
+          <div class="flow-screen-title">
+            <span class="eyebrow">3D Character Flow</span>
+            <h1>Importa a referência e escolhe a biblioteca</h1>
+            <p>Sobe a imagem-base, ajusta as instruções e dispara a geração com Biblioteca A ou B.</p>
           </div>
+          <button class="btn btn-ghost" data-action="back-landing">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+            </svg>
+            Voltar
+          </button>
+        </div>
 
+        <div class="flow-panel">
           <!-- Preview do upload -->
           <div class="upload-preview" id="upload-preview">
             <div class="upload-preview-empty">
@@ -96,17 +147,27 @@
             <span class="btn-subtitle">Fluxo 3 — SVG textual</span>
           </button>
         </div>
+      </div>
+    </section>
 
-        <!-- DIVISOR -->
-        <div class="home-divider" aria-hidden="true"></div>
-
-        <!-- LADO DIREITO -->
-        <div class="home-col home-col-right">
-          <div class="home-col-header">
-            <h2>Apenas prompt</h2>
-            <p>Para gerar SVG estilizado a partir da Biblioteca A</p>
+    <!-- ========== TELA 1B — FLUXO 2D ========== -->
+    <section id="screen-flow-2d" class="screen">
+      <div class="flow-screen">
+        <div class="flow-screen-header">
+          <div class="flow-screen-title">
+            <span class="eyebrow">2D Character Flow</span>
+            <h1>Define o estilo via prompt</h1>
+            <p>Cola o prompt que descreve o visual do SVG e gera a partir da Biblioteca A.</p>
           </div>
+          <button class="btn btn-ghost" data-action="back-landing">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+            </svg>
+            Voltar
+          </button>
+        </div>
 
+        <div class="flow-panel">
           <textarea
             id="prompt-fluxo2"
             class="input prompt-fluxo2"
@@ -119,7 +180,6 @@
             <span class="btn-subtitle">Fluxo 2 — SVG por imagem</span>
           </button>
         </div>
-
       </div>
     </section>
 
@@ -271,7 +331,7 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
           </svg>
-          Voltar para a Home
+          Voltar
         </button>
         <div>
           <h1>Geração concluída</h1>

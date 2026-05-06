@@ -1,16 +1,27 @@
 # Handoff — Resumo (lê este primeiro)
 
-> Atualizado em: 04/05/2026
+> Atualizado em: 06/05/2026
 > Para detalhes completos: [`HANDOFF.md`](./HANDOFF.md)
 
 ## Estado atual
 
-MVP completo, deployado, rodando em mock. Falta popular dados reais e integrar Tripo.
+MVP completo, deployado, rodando em mock. **UI redesenhada (06/05)**: nova landing com dois fluxos, tema dark/premium com glow roxo/lilás/magenta, background reativo ao mouse. Falta popular dados reais e integrar Tripo.
 
 - **App**: https://stlai-asset-generator.vercel.app
 - **Repo**: https://github.com/tiagotsuisilva/stlai-asset-generator
 - **Local**: `C:\Users\tiago\Downloads\stlai-asset-generator\stlai-asset-generator`
 - **Demo Day**: 08/05/2026
+
+## Última mudança — Reestruturação visual (06/05/2026)
+
+- App agora abre numa **landing page** dark/minimalista com dois cards principais:
+  - **3D CHARACTER FLOW** → tela com upload + bloco extra + botões Biblioteca A/B
+  - **2D CHARACTER FLOW** → tela com prompt textual + botão Biblioteca A
+- Telas: `screen-home` (landing), `screen-flow-3d`, `screen-flow-2d` + restante intacto.
+- CSS reescrito: tokens novos (dark, glows roxo/lilás/magenta), botões arredondados, cards com vidro fosco (backdrop-filter).
+- Background reativo ao mouse via CSS vars `--mx`/`--my` setadas em rAF; degrada em `<880px` e `prefers-reduced-motion`.
+- Funcionalidade dos fluxos preservada (mesmos IDs, mesmas chamadas a `iniciarFluxo`).
+- Botão "Voltar" das telas internas (biblioteca/preview/result) volta pra flow screen ativa, não pra landing — preserva contexto.
 
 ## Pendências críticas (bloqueantes pro Demo Day)
 
@@ -23,7 +34,8 @@ MVP completo, deployado, rodando em mock. Falta popular dados reais e integrar T
 
 5. Popular Biblioteca B (11 imagens).
 6. Definir prompt do Fluxo 3.
-7. Smoke test final na URL pública.
+7. Smoke test final na URL pública (especialmente da nova landing/dark UI).
+8. Eventual refinamento das telas internas (biblioteca/preview/tripo) seguindo o novo visual — hoje já herdam tokens dark, mas podem ganhar polish.
 
 ## Como rodar local
 

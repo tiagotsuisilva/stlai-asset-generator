@@ -3,25 +3,26 @@
    ------------------------------------------------------------
    Single-page app: troca a tela visível via classe .screen-active.
    Estado guardado em window.appState.
+   O efeito de background "água-viva" vive em js/bg.js.
    ============================================================ */
 
 const appState = {
   currentScreen: 'home',
   currentFlow: null,        // 'fluxo1' | 'fluxo2' | 'fluxo3'
-  currentFlowScreen: null,  // 'flow-3d' | 'flow-2d' — origem do fluxo ativo (pra "Voltar")
+  currentFlowScreen: null,  // 'flow-3d' | 'flow-2d'
 
-  uploadedImage: null,      // { dataUrl, name, file }
+  uploadedImage: null,
   blocoExtra: '',
   promptFluxo2: '',
 
   bibliotecaA: [],
   bibliotecaB: [],
 
-  bibliotecaSelection: [],  // itens selecionados na Tela 2
-  generatedImages: [],      // resultados do Fluxo 1 (antes do Tripo)
-  selectedForTripo: [],     // imagens aprovadas para 3D
-  generatedSvgs: [],        // resultados Fluxo 2/3
-  generated3D: [],          // resultados Tripo
+  bibliotecaSelection: [],
+  generatedImages: [],
+  selectedForTripo: [],
+  generatedSvgs: [],
+  generated3D: [],
 
   tripoParams: {
     versao: 'standard',
@@ -46,40 +47,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   bindTripoEvents();
   bindResultEvents();
   bindSettingsEvents();
-  initBackgroundSpotlight();
 
   await carregarBibliotecas();
   atualizarMockBadge();
   atualizarBotoesHome();
 });
-
-
-/* ===== BACKGROUND INTERATIVO ============================ */
-// Atualiza CSS vars --mx / --my no <body> conforme o cursor.
-// Usa rAF + throttle pra não pesar; ignora em telas pequenas.
-function initBackgroundSpotlight() {
-  if (window.matchMedia('(max-width: 880px)').matches) return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  let pendingX = 50, pendingY = 30;
-  let scheduled = false;
-
-  function schedule() {
-    if (scheduled) return;
-    scheduled = true;
-    requestAnimationFrame(() => {
-      document.body.style.setProperty('--mx', pendingX + '%');
-      document.body.style.setProperty('--my', pendingY + '%');
-      scheduled = false;
-    });
-  }
-
-  window.addEventListener('mousemove', (e) => {
-    pendingX = (e.clientX / window.innerWidth) * 100;
-    pendingY = (e.clientY / window.innerHeight) * 100;
-    schedule();
-  }, { passive: true });
-}
 
 
 /* ===== LANDING (Tela 0) ================================== */
@@ -144,7 +116,6 @@ async function carregarBibliotecas() {
 /* ===== HOME ============================================== */
 
 function bindHomeEvents() {
-  // Upload
   const fileInput = document.getElementById('file-input');
   fileInput.addEventListener('change', async (e) => {
     const file = e.target.files?.[0];
@@ -155,23 +126,19 @@ function bindHomeEvents() {
     atualizarBotoesHome();
   });
 
-  // Bloco extra
   document.getElementById('bloco-extra').addEventListener('input', (e) => {
     appState.blocoExtra = e.target.value;
   });
 
-  // Prompt Fluxo 2
   document.getElementById('prompt-fluxo2').addEventListener('input', (e) => {
     appState.promptFluxo2 = e.target.value;
     atualizarBotoesHome();
   });
 
-  // Botões dos fluxos
   document.getElementById('btn-bib-a-fluxo1').addEventListener('click', () => iniciarFluxo('fluxo1'));
   document.getElementById('btn-bib-a-fluxo2').addEventListener('click', () => iniciarFluxo('fluxo2'));
   document.getElementById('btn-bib-b-fluxo3').addEventListener('click', () => iniciarFluxo('fluxo3'));
 
-  // Voltar para a tela do fluxo de origem (ou landing como fallback)
   document.querySelectorAll('[data-action="back-home"]').forEach(btn => {
     btn.addEventListener('click', () => {
       const target = appState.currentFlowScreen || 'home';
@@ -216,7 +183,6 @@ function iniciarFluxo(fluxo) {
   const itens = (fluxo === 'fluxo3') ? appState.bibliotecaB : appState.bibliotecaA;
   renderBiblioteca(itens);
 
-  // Texto do botão
   const btn = document.getElementById('btn-gerar');
   btn.querySelector('.btn-title').textContent =
     (fluxo === 'fluxo1') ? 'Gerar imagens' : 'Gerar';
@@ -391,12 +357,10 @@ function atualizarPreviewCounter() {
 /* ===== TRIPO (Tela 4) ==================================== */
 
 function bindTripoEvents() {
-  // Voltar pra Tela 3
   document.querySelectorAll('[data-action="back-preview"]').forEach(btn => {
     btn.addEventListener('click', () => showScreen('preview'));
   });
 
-  // Mesh resolution toggle
   document.querySelectorAll('.toggle[data-mesh]').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.toggle[data-mesh]').forEach(b => b.classList.remove('active'));
@@ -405,7 +369,6 @@ function bindTripoEvents() {
     });
   });
 
-  // Polycount slider
   const slider = document.getElementById('tripo-polycount');
   const valueLabel = document.getElementById('tripo-polycount-value');
   slider.addEventListener('input', (e) => {
@@ -512,7 +475,6 @@ function renderResultado3D() {
     `Fluxo 1 — Personagem 3D — ${appState.generated3D.length} ${appState.generated3D.length === 1 ? 'modelo gerado' : 'modelos gerados'}.`;
   const grid = document.getElementById('result-grid');
   grid.innerHTML = '';
-  // Exibe a imagem aprovada como preview do modelo 3D (na real, podia ser thumbnail do GLB).
   appState.selectedForTripo.forEach((img, i) => {
     const card = document.createElement('div');
     card.className = 'grid-card';
@@ -533,7 +495,6 @@ async function baixarZip() {
   const arquivos = [];
 
   if (fluxo === 'fluxo1' && appState.generated3D.length) {
-    // ZIP com modelos 3D + imagens fonte
     appState.generated3D.forEach((r) => {
       arquivos.push({ caminho: `modelos/${r.nomeArquivo}`, conteudo: r.blob });
     });
@@ -605,7 +566,6 @@ function salvarSettings() {
 /* ===== EVENTOS GLOBAIS =================================== */
 
 function bindGlobalEvents() {
-  // ESC fecha modal
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !document.getElementById('settings-modal').hidden) {
       fecharSettings();
@@ -622,16 +582,15 @@ function escapeHtml(s) {
   );
 }
 
-// Placeholder SVG quando a imagem não carrega (ex: usuário ainda não colou os PNGs).
 window.uiPlaceholderSVG = function (label) {
   const safe = escapeHtml(label);
   return `<svg class="placeholder-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
     <defs><linearGradient id="ph${Math.random().toString(36).slice(2)}" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#C8B8E8"/><stop offset="100%" stop-color="#E5DCF3"/>
+      <stop offset="0%" stop-color="#9d4edd"/><stop offset="100%" stop-color="#e879f9"/>
     </linearGradient></defs>
-    <rect width="100" height="100" fill="#E5DCF3"/>
-    <circle cx="50" cy="42" r="20" fill="#C8B8E8" opacity="0.6"/>
-    <text x="50" y="78" text-anchor="middle" font-family="Inter,sans-serif" font-size="6" fill="#5C5C70">${safe}</text>
-    <text x="50" y="88" text-anchor="middle" font-family="Inter,sans-serif" font-size="4" fill="#8A8AA0">imagem ausente</text>
+    <rect width="100" height="100" fill="#1c1736"/>
+    <circle cx="50" cy="42" r="20" fill="#7c3aed" opacity="0.6"/>
+    <text x="50" y="78" text-anchor="middle" font-family="Inter,sans-serif" font-size="6" fill="#b8b2d9">${safe}</text>
+    <text x="50" y="88" text-anchor="middle" font-family="Inter,sans-serif" font-size="4" fill="#7e779c">imagem ausente</text>
   </svg>`;
 };

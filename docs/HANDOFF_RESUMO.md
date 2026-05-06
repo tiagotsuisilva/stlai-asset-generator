@@ -12,16 +12,28 @@ MVP completo, deployado, rodando em mock. **UI redesenhada (06/05)**: nova landi
 - **Local**: `C:\Users\tiago\Downloads\stlai-asset-generator\stlai-asset-generator`
 - **Demo Day**: 08/05/2026
 
-## Última mudança — Reestruturação visual (06/05/2026)
+## Última mudança — Reestruturação visual + efeito água-viva (06/05/2026)
 
 - App agora abre numa **landing page** dark/minimalista com dois cards principais:
   - **3D CHARACTER FLOW** → tela com upload + bloco extra + botões Biblioteca A/B
   - **2D CHARACTER FLOW** → tela com prompt textual + botão Biblioteca A
 - Telas: `screen-home` (landing), `screen-flow-3d`, `screen-flow-2d` + restante intacto.
 - CSS reescrito: tokens novos (dark, glows roxo/lilás/magenta), botões arredondados, cards com vidro fosco (backdrop-filter).
-- Background reativo ao mouse via CSS vars `--mx`/`--my` setadas em rAF; degrada em `<880px` e `prefers-reduced-motion`.
+- **Novo efeito de background "água-viva"** (substitui o spotlight simples):
+  - Goo/metaball via SVG (`feGaussianBlur` + `feColorMatrix` threshold).
+  - Trail de 12 blobs com easing decrescente — mouse parado vira bola pulsante; rápido forma cauda alongada.
+  - Cor reage à velocidade: violeta → magenta → coral.
+  - Implementado em `js/bg.js` (separado do `ui.js` por causa de limite de tamanho do disco).
+  - Desligado em mobile (<880px) e em `prefers-reduced-motion`.
 - Funcionalidade dos fluxos preservada (mesmos IDs, mesmas chamadas a `iniciarFluxo`).
 - Botão "Voltar" das telas internas (biblioteca/preview/result) volta pra flow screen ativa, não pra landing — preserva contexto.
+
+## Arquivos novos / alterados
+
+- `index.html` — landing + screen-flow-3d + screen-flow-2d; inclui `js/bg.js`.
+- `css/style.css` — reescrito (tokens dark, landing, flow-screens, goo-bg).
+- `js/ui.js` — navegação landing/flows, back-home volta pra flow screen.
+- `js/bg.js` (novo) — efeito goo trail interativo.
 
 ## Pendências críticas (bloqueantes pro Demo Day)
 

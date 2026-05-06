@@ -1,10 +1,12 @@
 /* ============================================================
-   STLAI Asset Generator — Background interativo (Versão A)
+   STLAI Asset Generator — Background interativo (Versão B)
    ------------------------------------------------------------
-   Estilo "água-viva luminosa" inspirado na Mariza Felicio.
-   - Cada blob usa <radialGradient> (centro luminoso → borda transparente).
-   - Offset orbital por blob → forma irregular mesmo parado.
-   - Trail com easing suave + leve respiração.
+   Sistema de partículas efêmeras (Canvas 2D) inspirado em rastro
+   de luz com dissipação:
+   - Cabeça brilhante segue o cursor.
+   - Cada posição passada vira partícula que cresce e desbota.
+   - Forma de cogumelo quando o cursor para após mover.
+   - Composite "lighter" (luz somando luz) sobre fundo escuro.
    - Desligado em mobile e em prefers-reduced-motion.
    ============================================================ */
 
@@ -13,122 +15,134 @@
     if (window.matchMedia('(max-width: 880px)').matches) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    const SVG_NS = 'http://www.w3.org/2000/svg';
-    const N_BLOBS = 6;
-
+    // Container + canvas
     const wrap = document.createElement('div');
     wrap.className = 'goo-bg';
     wrap.setAttribute('aria-hidden', 'true');
-
-    const svg = document.createElementNS(SVG_NS, 'svg');
-    svg.setAttribute('xmlns', SVG_NS);
-    svg.setAttribute('preserveAspectRatio', 'none');
-
-    // 3 gradientes radiais (núcleo → cor → transparente). Cada blob escolhe um.
-    const defs = document.createElementNS(SVG_NS, 'defs');
-    defs.innerHTML = `
-      <radialGradient id="g-violet" cx="50%" cy="50%" r="50%">
-        <stop offset="0%"  stop-color="rgb(245,225,255)" stop-opacity="0.95"/>
-        <stop offset="35%" stop-color="rgb(180,120,255)" stop-opacity="0.55"/>
-        <stop offset="100%" stop-color="rgb(90,30,180)"  stop-opacity="0"/>
-      </radialGradient>
-      <radialGradient id="g-magenta" cx="50%" cy="50%" r="50%">
-        <stop offset="0%"  stop-color="rgb(255,220,250)" stop-opacity="0.95"/>
-        <stop offset="35%" stop-color="rgb(232,121,249)" stop-opacity="0.55"/>
-        <stop offset="100%" stop-color="rgb(170,40,200)" stop-opacity="0"/>
-      </radialGradient>
-      <radialGradient id="g-coral" cx="50%" cy="50%" r="50%">
-        <stop offset="0%"  stop-color="rgb(255,230,210)" stop-opacity="0.85"/>
-        <stop offset="35%" stop-color="rgb(244,114,140)" stop-opacity="0.45"/>
-        <stop offset="100%" stop-color="rgb(180,40,80)"  stop-opacity="0"/>
-      </radialGradient>
-      <filter id="bg-soft" x="-30%" y="-30%" width="160%" height="160%">
-        <feGaussianBlur stdDeviation="14"/>
-      </filter>
-    `;
-    svg.appendChild(defs);
-
-    const group = document.createElementNS(SVG_NS, 'g');
-    group.setAttribute('filter', 'url(#bg-soft)');
-    svg.appendChild(group);
-
-    wrap.appendChild(svg);
+    const canvas = document.createElement('canvas');
+    canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;';
+    wrap.appendChild(canvas);
     document.body.appendChild(wrap);
 
-    let W = window.innerWidth, H = window.innerHeight;
-    function setSize() {
-      W = window.innerWidth; H = window.innerHeight;
-      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    const ctx = canvas.getContext('2d');
+    let W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    function resize() {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = Math.floor(W * dpr);
+      canvas.height = Math.floor(H * dpr);
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
-    setSize();
-    window.addEventListener('resize', setSize);
+    resize();
+    window.addEventListener('resize', resize);
 
-    const startX = W / 2, startY = H / 2;
-    const gradients = ['g-violet', 'g-magenta', 'g-coral'];
-    const blobs = [];
-
-    for (let i = 0; i < N_BLOBS; i++) {
-      const c = document.createElementNS(SVG_NS, 'circle');
-      c.setAttribute('cx', startX);
-      c.setAttribute('cy', startY);
-      c.setAttribute('r', 0);
-      c.setAttribute('fill', `url(#${gradients[i % gradients.length]})`);
-      group.appendChild(c);
-      blobs.push({
-        el: c, x: startX, y: startY,
-        phase: Math.random() * Math.PI * 2,
-        orbitRadius: 30 + Math.random() * 40,   // distância do alvo
-        orbitSpeed: 0.4 + Math.random() * 0.4,  // rad/s
-        baseR: 130 - i * 12,
-      });
+    // Pré-renderiza sprite da partícula (radial gradient luminoso).
+    // Renderizamos uma só vez e reusamos com drawImage + alpha + scale.
+    const SPRITE = 256;
+    function makeSprite(stops) {
+      const off = document.createElement('canvas');
+      off.width = SPRITE; off.height = SPRITE;
+      const c = off.getContext('2d');
+      const g = c.createRadialGradient(SPRITE/2, SPRITE/2, 0, SPRITE/2, SPRITE/2, SPRITE/2);
+      stops.forEach(([off, color]) => g.addColorStop(off, color));
+      c.fillStyle = g;
+      c.fillRect(0, 0, SPRITE, SPRITE);
+      return off;
     }
+    const sprites = [
+      makeSprite([
+        [0.0, 'rgba(255,235,255,1)'],
+        [0.18, 'rgba(220,170,255,0.85)'],
+        [0.45, 'rgba(160,90,240,0.35)'],
+        [1.0, 'rgba(90,30,180,0)'],
+      ]),
+      makeSprite([
+        [0.0, 'rgba(255,230,250,1)'],
+        [0.18, 'rgba(245,170,235,0.85)'],
+        [0.45, 'rgba(232,121,249,0.35)'],
+        [1.0, 'rgba(150,40,180,0)'],
+      ]),
+      makeSprite([
+        [0.0, 'rgba(255,235,220,1)'],
+        [0.18, 'rgba(255,180,180,0.8)'],
+        [0.45, 'rgba(244,114,140,0.3)'],
+        [1.0, 'rgba(180,40,80,0)'],
+      ]),
+    ];
 
-    let mouseX = startX, mouseY = startY;
-    let lastMX = startX, lastMY = startY;
-    let speed = 0;
-
+    // Mouse
+    let mouseX = W / 2, mouseY = H / 2;
+    let hasMouse = false;
     window.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX; mouseY = e.clientY;
-      const dx = mouseX - lastMX, dy = mouseY - lastMY;
-      const inst = Math.sqrt(dx * dx + dy * dy);
-      speed = speed * 0.78 + inst * 0.22;
-      lastMX = mouseX; lastMY = mouseY;
+      mouseX = e.clientX; mouseY = e.clientY; hasMouse = true;
     }, { passive: true });
 
-    function animate(now) {
-      speed *= 0.95;
-      const v = Math.min(speed / 30, 1);
-      const time = now * 0.001;
+    // Partículas
+    const particles = [];
+    const MAX = 80;
 
-      // Líder converge no mouse com easing leve
-      const leadEase = 0.07 + v * 0.10;
-      blobs[0].x += (mouseX - blobs[0].x) * leadEase;
-      blobs[0].y += (mouseY - blobs[0].y) * leadEase;
-
-      // Cauda: cada blob segue o anterior + offset orbital próprio
-      for (let i = 1; i < N_BLOBS; i++) {
-        const ease = Math.max(0.04, 0.12 - i * 0.012);
-        blobs[i].x += (blobs[i - 1].x - blobs[i].x) * ease;
-        blobs[i].y += (blobs[i - 1].y - blobs[i].y) * ease;
-      }
-
-      for (let i = 0; i < N_BLOBS; i++) {
-        const b = blobs[i];
-        // Offset orbital → forma irregular mesmo parado
-        const ox = Math.cos(time * b.orbitSpeed + b.phase) * b.orbitRadius;
-        const oy = Math.sin(time * b.orbitSpeed * 1.3 + b.phase) * b.orbitRadius;
-        // Respiracao no raio
-        const wobble = Math.sin(time * 1.5 + b.phase) * 22;
-        const r = Math.max(40, b.baseR + wobble);
-
-        b.el.setAttribute('cx', (b.x + ox).toFixed(1));
-        b.el.setAttribute('cy', (b.y + oy).toFixed(1));
-        b.el.setAttribute('r', r.toFixed(1));
-      }
-
-      requestAnimationFrame(animate);
+    function spawn(now) {
+      // Pequeno jitter pra variar o nascimento
+      const jx = (Math.random() - 0.5) * 6;
+      const jy = (Math.random() - 0.5) * 6;
+      particles.push({
+        x: mouseX + jx,
+        y: mouseY + jy,
+        bornAt: now,
+        life: 1100 + Math.random() * 600, // ms
+        r0: 18 + Math.random() * 8,        // raio inicial
+        rGrow: 110 + Math.random() * 70,   // quanto cresce
+        vy: -0.15 - Math.random() * 0.25,  // drift pra cima (px/frame ~)
+        vx: (Math.random() - 0.5) * 0.3,
+        sprite: sprites[(Math.random() * sprites.length) | 0],
+        peak: 0.55 + Math.random() * 0.2,  // alpha de pico
+      });
+      if (particles.length > MAX) particles.shift();
     }
-    requestAnimationFrame(animate);
+
+    let lastSpawn = 0;
+    const SPAWN_INTERVAL = 18; // ms — ~55 spawns/s
+
+    function frame(now) {
+      ctx.clearRect(0, 0, W, H);
+
+      if (hasMouse && now - lastSpawn > SPAWN_INTERVAL) {
+        spawn(now);
+        lastSpawn = now;
+      }
+
+      ctx.globalCompositeOperation = 'lighter';
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        const age = now - p.bornAt;
+        const t = age / p.life;
+        if (t >= 1) { particles.splice(i, 1); continue; }
+
+        // Movimento próprio: drift e leve dispersão
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Raio cresce com a idade
+        const r = p.r0 + p.rGrow * t;
+        // Alpha: fade-in rápido, fade-out longo
+        const fadeIn = Math.min(1, t * 6);
+        const fadeOut = 1 - t;
+        const alpha = p.peak * fadeIn * fadeOut * fadeOut; // ease-out² no fim
+
+        ctx.globalAlpha = alpha;
+        ctx.drawImage(p.sprite, p.x - r, p.y - r, r * 2, r * 2);
+      }
+
+      ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = 'source-over';
+
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
   }
 
   if (document.readyState === 'loading') {

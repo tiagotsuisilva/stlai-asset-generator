@@ -7,15 +7,19 @@
 
 MVP completo, deployado, rodando em mock. **Reestruturação 3 fluxos + 1º caso real consolidado**: 3 fluxos modulares (3D / 2D / Pose Transfer), Biblioteca C, blocos modulares (Acessórios / Estilo / Estética / Proporção / Realismo / Material / Técnico), upload clicável, lightbox. Primeiro caso real do 3D (`accessoriesMode = keep` + `styleSource = image1`) registrado e ativo. Demais casos aguardando prompts.
 
-## Última mudança — Primeiro caso real do 3D Flow (07/05/2026 — segunda revisão)
+## Última mudança — Segundo caso real do 3D Flow (07/05/2026 — terceira revisão)
 
-- **Caso consolidado**: `accessoriesMode = "keep"` + `styleSource = "image1"`.
-- Constante `PROMPT_3D_CASE_KEEP_IMAGE1` em `js/prompts.js` com prompt aprovado completo (Image 1 = estrutura + estilo, Image 2 = identidade + acessórios).
-- Builder novo: `window.build3DCharacterPrompt(opcoes, blocoExtra)` — escolhe o prompt baseado no state. Demais combinações caem em placeholder + warning no console.
-- `js/api.js → gerarImagensFluxo1` agora aceita `opcoes` e usa o builder. Fallback pro template antigo se builder ausente.
-- `js/ui.js → executarGeracao` passa `appState.threeDFlowOptions` pra função.
-- UI da "Personalização manual" só aparece com `styleSource = "manual"` (validado — já estava implementado pela camada modular anterior; agora documentado).
-- `docs/PROMPTS_TODO.md` ganhou seção "Casos consolidados" no topo, listando o caso ativo + roteamento.
+- **Caso novo consolidado**: `accessoriesMode = "remove"` + `styleSource = "image1"`.
+  - Constante `PROMPT_3D_CASE_REMOVE_IMAGE1` em `js/prompts.js` com o prompt aprovado completo. Image 1 = estrutura + estilo. Image 2 = identidade pura, sem acessórios externos. Acessórios removíveis (espada/escudo/bolsa/etc.) são suprimidos do resultado; armadura/roupa principal/cabelo/rosto são preservados.
+- Builder `build3DCharacterPrompt` refatorado pra usar um **lookup table** (chave `${accessoriesMode}__${styleSource}`) — facilita registrar próximos casos.
+- Casos consolidados ativos: `keep__image1` e `remove__image1`. Demais combinações caem em placeholder + warning no console.
+- `docs/PROMPTS_TODO.md` atualizado: linha 2 na tabela de "Casos consolidados".
+
+### Casos anteriores (referência)
+
+- `keep__image1` (07/05, segunda revisão) — `PROMPT_3D_CASE_KEEP_IMAGE1`. Image 1 = estrutura + estilo. Image 2 = identidade + acessórios preservados.
+- Pipeline: `js/api.js → gerarImagensFluxo1` chama o builder; `js/ui.js → executarGeracao` passa `appState.threeDFlowOptions`.
+- UI da "Personalização manual" aparece só com `styleSource = "manual"` (já implementado pela camada modular).
 
 - **App**: https://stlai-asset-generator.vercel.app
 - **Repo**: https://github.com/tiagotsuisilva/stlai-asset-generator

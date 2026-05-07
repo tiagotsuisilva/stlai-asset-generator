@@ -300,6 +300,7 @@ async function executarGeracao() {
       const results = await window.api.gerarImagensFluxo1({
         uploadDataUrl: appState.uploadedImage?.dataUrl,
         blocoExtra: appState.blocoExtra,
+        opcoes: appState.threeDFlowOptions,
         itensBiblioteca: itens,
         onProgress: atualizarProgresso,
       });

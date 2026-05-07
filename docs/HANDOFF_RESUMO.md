@@ -1,11 +1,21 @@
 # Handoff — Resumo (lê este primeiro)
 
-> Atualizado em: 07/05/2026
+> Atualizado em: 07/05/2026 (segunda revisão)
 > Para detalhes completos: [`HANDOFF.md`](./HANDOFF.md)
 
 ## Estado atual
 
-MVP completo, deployado, rodando em mock. **Reestruturação maior em 07/05**: 3 fluxos modulares (3D / 2D / Pose Transfer), Biblioteca C nova, blocos modulares de prompt (Acessórios / Estilo / Estética / Proporção / Realismo / Material / Técnico), upload clicável, lightbox no preview. Prompts definitivos serão fornecidos depois — toda a estrutura está pronta com placeholders.
+MVP completo, deployado, rodando em mock. **Reestruturação 3 fluxos + 1º caso real consolidado**: 3 fluxos modulares (3D / 2D / Pose Transfer), Biblioteca C, blocos modulares (Acessórios / Estilo / Estética / Proporção / Realismo / Material / Técnico), upload clicável, lightbox. Primeiro caso real do 3D (`accessoriesMode = keep` + `styleSource = image1`) registrado e ativo. Demais casos aguardando prompts.
+
+## Última mudança — Primeiro caso real do 3D Flow (07/05/2026 — segunda revisão)
+
+- **Caso consolidado**: `accessoriesMode = "keep"` + `styleSource = "image1"`.
+- Constante `PROMPT_3D_CASE_KEEP_IMAGE1` em `js/prompts.js` com prompt aprovado completo (Image 1 = estrutura + estilo, Image 2 = identidade + acessórios).
+- Builder novo: `window.build3DCharacterPrompt(opcoes, blocoExtra)` — escolhe o prompt baseado no state. Demais combinações caem em placeholder + warning no console.
+- `js/api.js → gerarImagensFluxo1` agora aceita `opcoes` e usa o builder. Fallback pro template antigo se builder ausente.
+- `js/ui.js → executarGeracao` passa `appState.threeDFlowOptions` pra função.
+- UI da "Personalização manual" só aparece com `styleSource = "manual"` (validado — já estava implementado pela camada modular anterior; agora documentado).
+- `docs/PROMPTS_TODO.md` ganhou seção "Casos consolidados" no topo, listando o caso ativo + roteamento.
 
 - **App**: https://stlai-asset-generator.vercel.app
 - **Repo**: https://github.com/tiagotsuisilva/stlai-asset-generator
@@ -114,8 +124,6 @@ npx serve
 
 ## Prompt de abertura — copiar e colar em conversa nova do Claude Cowork
 
-> Cola este bloco INTEIRO no Claude Cowork sempre que abrir uma sessão nova. Ele já dá o caminho da pasta, manda o Claude pedir acesso e ler os arquivos certos.
-
 ```
 Estou continuando o projeto STLAI Asset Generator.
 
@@ -126,8 +134,6 @@ Por favor:
 1. Pede acesso a essa pasta (use a ferramenta request_cowork_directory com esse caminho exato).
 2. Depois que a pasta estiver conectada, lê o `CLAUDE.md` na raiz dela.
 3. Lê também `docs/HANDOFF_RESUMO.md`.
-4. Só lê outros arquivos (HANDOFF.md, PRD, código) se a tarefa pedir contexto profundo — não leia "por garantia".
+4. Só lê outros arquivos (HANDOFF.md, PRD, código) se a tarefa pedir contexto profundo.
 5. Me diz em 2-3 linhas onde estamos e qual é a próxima tarefa lógica.
 ```
-
-Pra tarefas específicas vindas do ChatGPT, use o prompt do **CHECKPOINT** entregue por ele em vez deste — esse é só pro caso de "abertura sem agenda".

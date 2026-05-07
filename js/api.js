@@ -194,11 +194,18 @@ async function callOpenAIImageGenFluxo2({ imagemBibBlob, prompt }) {
  * Fluxo 1 — Personagem 3D: gera 1 imagem por personagem selecionado.
  * Retorna array de { sourceItem, dataUrl }.
  */
-async function gerarImagensFluxo1({ uploadDataUrl, blocoExtra, itensBiblioteca, onProgress }) {
-  const promptBase = (window.PROMPT_FLUXO1_BASE || '').replace(
-    '{bloco_extra_do_usuario}',
-    blocoExtra || '(no additional instructions)'
-  );
+async function gerarImagensFluxo1({ uploadDataUrl, blocoExtra, opcoes, itensBiblioteca, onProgress }) {
+  // Preferimos o builder modular novo (casos consolidados do 3D CHARACTER FLOW).
+  // Fallback pro template antigo PROMPT_FLUXO1_BASE quando o builder não existe.
+  let promptBase;
+  if (typeof window.build3DCharacterPrompt === 'function' && opcoes) {
+    promptBase = window.build3DCharacterPrompt(opcoes, blocoExtra);
+  } else {
+    promptBase = (window.PROMPT_FLUXO1_BASE || '').replace(
+      '{bloco_extra_do_usuario}',
+      blocoExtra || '(no additional instructions)'
+    );
+  }
 
   const results = [];
   const refBlob = uploadDataUrl ? dataURLToBlob(uploadDataUrl) : null;

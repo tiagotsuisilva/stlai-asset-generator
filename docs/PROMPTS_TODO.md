@@ -1,11 +1,25 @@
 # PROMPTS_TODO — placeholders e arquitetura modular
 
-> Status: aguardando prompts definitivos.
-> Última atualização: 07/05/2026.
->
-> Este documento serve como **mapa** dos prompts que serão escritos depois (fora do Claude).
-> Cada seção lista o gatilho da UI/state e contém um placeholder a ser preenchido.
-> Não escrever os prompts aqui — só preencher quando estiverem aprovados.
+> Status: 1 caso consolidado, demais aguardando prompts definitivos.
+> Última atualização: 07/05/2026 (segunda revisão).
+
+## Casos consolidados (com prompt aprovado)
+
+| # | Fluxo | Combinação de state | Constante / builder |
+|---|---|---|---|
+| 1 | 3D Character Flow | `accessoriesMode = "keep"` + `styleSource = "image1"` | `PROMPT_3D_CASE_KEEP_IMAGE1` em `js/prompts.js` |
+
+Roteamento atual:
+- `js/api.js → gerarImagensFluxo1` chama `window.build3DCharacterPrompt(opcoes, blocoExtra)`.
+- O builder retorna `PROMPT_3D_CASE_KEEP_IMAGE1` quando `accessoriesMode = "keep"` E `styleSource = "image1"`.
+- Demais combinações caem num placeholder `[AGUARDANDO PROMPT DEFINITIVO PARA: ...]` e logam um warning no console — sinalizando que esse caso ainda precisa de prompt.
+
+Próximos casos prioritários a escrever (sugestão):
+- `keep` + `image2`
+- `remove` + `image1`
+- `manual` (definir sub-casos relevantes — provavelmente um por combinação de Estética × Proporção × Realismo × Material).
+
+> Documento serve como mapa dos prompts que serão escritos depois (fora do Claude). Não escrever prompts finais aqui — só preencher quando aprovados.
 
 ---
 
@@ -249,8 +263,8 @@ Recomendação ao escrever os prompts manuais: incluir desambiguações dentro d
 
 ## Arquivos relacionados
 
-- `js/prompts.js` — define as constantes placeholder. Substituir os valores quando os prompts forem aprovados.
-- `js/api.js` — futuramente vai chamar funções que montam o prompt final concatenando os módulos baseado no state do fluxo.
+- `js/prompts.js` — define as constantes placeholder + casos consolidados. Substituir `[AGUARDANDO PROMPT DEFINITIVO]` quando os prompts forem aprovados.
+- `js/api.js` — `gerarImagensFluxo1` chama `window.build3DCharacterPrompt(opcoes, blocoExtra)` pra escolher o prompt do caso.
 - State do 3D Flow: `appState.threeDFlowOptions`. State do Pose Flow: `appState.poseFlowOptions`. Estrutura idêntica:
 
 ```js

@@ -149,6 +149,143 @@ const PROMPT_MODULE_TECHNICAL_PRINT_FRIENDLY = PLACEHOLDER;
 const PROMPT_GLOBAL_ANTI_INTERFERENCE = PLACEHOLDER;
 
 
+/* ============================================================
+   CASOS CONSOLIDADOS — 3D CHARACTER FLOW
+   ------------------------------------------------------------
+   Cada "caso" é uma combinação concreta de state modular que
+   já tem prompt aprovado. Demais combinações continuam usando
+   placeholders (e podem ser registradas conforme forem definidas).
+   ============================================================ */
+
+// CASO 1 — accessoriesMode = "keep" + styleSource = "image1"
+// Image 1 = estrutura + estilo. Image 2 = identidade + acessórios.
+const PROMPT_3D_CASE_KEEP_IMAGE1 = `MULTI-IMAGE INSTRUCTION — 3D CHARACTER FLOW
+You will use TWO input images with different functions.
+
+FINAL OUTPUT REQUIREMENT
+Generate a SINGLE final image only.
+Do not output text, labels, panels, or multiple views.
+
+IMAGE ROLE LOGIC
+
+IMAGE 1 = STRUCTURE AND STYLE SOURCE
+Use Image 1 for:
+- pose
+- posture
+- body visibility
+- crop
+- framing
+- camera angle
+- composition
+- silhouette
+- visible body proportions
+- support logic
+- presence or absence of base or support surface
+- primary visual style language
+Image 1 defines the structural logic of the final result.
+Also use Image 1 as the main style source for:
+- stylization level
+- shape language
+- material feel
+- simplification level
+- overall visual treatment
+Do not use Image 1 as the identity source unless its identity is already meant to be preserved, which is not the case here.
+
+IMAGE 2 = CHARACTER IDENTITY AND ACCESSORIES SOURCE
+Use Image 2 for:
+- character identity
+- face and facial features
+- hairstyle or hair absence
+- facial hair or lack of facial hair
+- expression
+- outfit / costume / armor / clothing
+- colors
+- recognizable visual traits
+- visible accessories and removable props
+Use Image 2 as the appearance source only.
+Do not use Image 2 to define pose, framing, crop, or composition.
+
+CORE GOAL
+Create a polished 3D character render that:
+- follows the structural logic of Image 1
+- follows the visual style language of Image 1
+- preserves the character identity from Image 2
+- preserves visible accessories from Image 2 when compatible with the pose
+
+STRUCTURE RULES
+- Match the visible pose and body logic of Image 1.
+- Respect the visible crop from Image 1.
+- If Image 1 shows only bust, generate only bust.
+- If Image 1 shows half body, generate only half body.
+- If Image 1 crops the body, respect the same crop.
+- Do not invent missing anatomy.
+- Do not force full body.
+- Do not force feet, legs, hands, base, or props unless supported by Image 1.
+- Do not force seated pose, standing pose, action pose, or display base unless supported by Image 1.
+
+STYLE RULES
+- Use Image 1 as the main visual style source.
+- Transfer the aesthetic language of Image 1, including stylization level, material feel, shape simplification, and overall visual treatment.
+- Do not transfer the identity of Image 1.
+
+CHARACTER IDENTITY RULES
+- Preserve the target character identity from Image 2.
+- Preserve face, hair, outfit, colors, and recognizable character traits from Image 2.
+- Do not merge identities between Image 1 and Image 2.
+- The final result must clearly read as the character from Image 2.
+
+ACCESSORIES RULE
+- Preserve visible accessories, handheld props, weapons, shields, bags, tools, capes when clearly treated as accessories, and other external character items from Image 2 when they are compatible with the final pose and composition.
+- Adapt them naturally to the pose from Image 1 without changing the structural logic.
+- Do not remove accessories that are clearly part of the character identity.
+
+DEFAULT PRESENTATION
+- polished 3D render
+- collectible-quality finish
+- clean shapes
+- readable silhouette
+- clean lighting
+- uncluttered presentation
+
+GLOBAL DO NOTS
+- do not generate multiple views
+- do not generate a turnaround sheet
+- do not output text
+- do not force a pose that is not supported by Image 1
+- do not invent missing body parts
+- do not add random scenery or props
+- do not crop unexpectedly
+- do not create a base unless it is supported by Image 1`;
+
+
+/**
+ * Builder do prompt do 3D CHARACTER FLOW.
+ * Lida apenas com o primeiro caso consolidado por enquanto.
+ */
+function build3DCharacterPrompt(opcoes, blocoExtra) {
+  const o = opcoes || {};
+  const isCaseKeepImage1 =
+    o.accessoriesMode === 'keep' && o.styleSource === 'image1';
+
+  let body;
+  if (isCaseKeepImage1) {
+    body = PROMPT_3D_CASE_KEEP_IMAGE1;
+  } else {
+    console.warn(
+      '[prompts] Combinacao ainda nao consolidada: accessoriesMode=%s, styleSource=%s. Usando placeholder.',
+      o.accessoriesMode, o.styleSource
+    );
+    body = `[AGUARDANDO PROMPT DEFINITIVO PARA: accessoriesMode=${o.accessoriesMode}, styleSource=${o.styleSource}]`;
+  }
+
+  const extra = (blocoExtra || '').trim();
+  if (extra) {
+    body += `\n\nUSER ADDITIONAL INSTRUCTIONS\n${extra}`;
+  }
+  return body;
+}
+
+
 // Disponibilizar globalmente
 window.PROMPT_FLUXO1_BASE = PROMPT_FLUXO1_BASE;
 window.PROMPT_FLUXO2_DEFAULT = PROMPT_FLUXO2_DEFAULT;
@@ -175,3 +312,5 @@ window.PROMPT_MODULE_MATERIAL_SMOOTH_RESIN = PROMPT_MODULE_MATERIAL_SMOOTH_RESIN
 window.PROMPT_MODULE_MATERIAL_PAINTED_RESIN = PROMPT_MODULE_MATERIAL_PAINTED_RESIN;
 window.PROMPT_MODULE_TECHNICAL_PRINT_FRIENDLY = PROMPT_MODULE_TECHNICAL_PRINT_FRIENDLY;
 window.PROMPT_GLOBAL_ANTI_INTERFERENCE = PROMPT_GLOBAL_ANTI_INTERFERENCE;
+window.PROMPT_3D_CASE_KEEP_IMAGE1 = PROMPT_3D_CASE_KEEP_IMAGE1;
+window.build3DCharacterPrompt = build3DCharacterPrompt;

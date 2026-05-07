@@ -1,0 +1,65 @@
+[
+  {
+    "id": "pose_busto_frontal",
+    "title": "Busto frontal",
+    "description": "Personagem visto do peito pra cima, encarando a câmera.",
+    "image": "bibliotecaC/pose_busto_frontal.jpg",
+    "tags": ["frontal", "estatico", "fechado"],
+    "poseType": "static",
+    "visibilityType": "bust"
+  },
+  {
+    "id": "pose_busto_3_4",
+    "title": "Busto 3/4",
+    "description": "Busto em ângulo de três quartos, leve giro do tronco.",
+    "image": "bibliotecaC/pose_busto_3_4.jpg",
+    "tags": ["3-4", "estatico"],
+    "poseType": "static",
+    "visibilityType": "bust"
+  },
+  {
+    "id": "pose_meio_corpo_bracos_cruzados",
+    "title": "Meio-corpo, braços cruzados",
+    "description": "Meio-corpo, postura confiante, braços cruzados na frente.",
+    "image": "bibliotecaC/pose_meio_corpo_bracos_cruzados.jpg",
+    "tags": ["meio-corpo", "confiante", "bracos-cruzados"],
+    "poseType": "static",
+    "visibilityType": "half_body"
+  },
+  {
+    "id": "pose_corpo_inteiro_em_pe",
+    "title": "Corpo inteiro em pé",
+    "description": "Personagem em pé, postura neutra, corpo inteiro visível.",
+    "image": "bibliotecaC/pose_corpo_inteiro_em_pe.jpg",
+    "tags": ["corpo-inteiro", "em-pe", "neutro"],
+    "poseType": "standing",
+    "visibilityType": "full_body"
+  },
+  {
+    "id": "pose_corpo_inteiro_acao",
+    "title": "Corpo inteiro em ação",
+    "description": "Personagem em pose de ação dinâmica, peso transferido.",
+    "image": "bibliotecaC/pose_corpo_inteiro_acao.jpg",
+    "tags": ["corpo-inteiro", "acao", "dinamico"],
+    "poseType": "action",
+    "visibilityType": "full_body"
+  },
+  {
+    "id": "pose_sentado_base",
+    "title": "Sentado em base",
+    "description": "Personagem sentado em uma base/superfície, mãos apoiadas.",
+    "image": "bibliotecaC/pose_sentado_base.jpg",
+    "tags": ["sentado", "base", "apoiado"],
+    "poseType": "seated",
+    "visibilityType": "seated"
+  },
+  {
+    "id": "pose_recortado_topo",
+    "title": "Recortado no topo",
+    "description": "Crop no topo da cabeça, foco no rosto e ombros.",
+    "image": "bibliotecaC/pose_recortado_topo.jpg",
+    "tags": ["crop", "rosto"],
+    "poseType": "static",
+    "visibilityType": "cropped"
+  }
+]

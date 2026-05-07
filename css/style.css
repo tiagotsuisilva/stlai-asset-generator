@@ -899,6 +899,274 @@ select.input {
   .flow-panel { padding: 22px; }
 }
 
+
+/* ----- 17. Upload zone (clicável) ----- */
+.upload-zone {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background:
+    linear-gradient(180deg, rgba(124, 58, 237, 0.08), rgba(232, 121, 249, 0.04)),
+    var(--bg-elev);
+  border: 1.5px dashed rgba(192, 132, 252, 0.32);
+  border-radius: var(--radius-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.upload-zone:hover {
+  border-color: var(--accent-lilac);
+  background:
+    linear-gradient(180deg, rgba(124, 58, 237, 0.14), rgba(232, 121, 249, 0.08)),
+    var(--bg-elev-strong);
+}
+.upload-zone.dragging {
+  border-color: var(--accent-magenta);
+  box-shadow: 0 0 0 3px rgba(232, 121, 249, 0.18);
+}
+.upload-zone.has-image {
+  border-style: solid;
+  border-color: var(--border-strong);
+}
+.upload-zone img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.upload-zone-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 24px;
+}
+.upload-zone-empty svg { stroke: var(--accent-lilac); opacity: 0.85; }
+.upload-zone-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.upload-zone-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ----- 18. Flow panel header ----- */
+.flow-panel-header { display: flex; flex-direction: column; gap: 4px; margin-bottom: 4px; }
+.flow-panel-header h3 { color: var(--text-primary); font-size: 16px; }
+.flow-panel-header p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+.flow-screen-wide { max-width: 1100px; }
+.flow-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* ----- 19. Option blocks (modulares) ----- */
+.option-block {
+  background: rgba(20, 17, 42, 0.5);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.option-block-header { display: flex; flex-direction: column; gap: 2px; }
+.option-block-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+}
+.option-block-header p {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ----- 20. Segmented control ----- */
+.segmented {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 4px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.segmented-btn {
+  flex: 1 1 auto;
+  min-width: max-content;
+  padding: 9px 14px;
+  border: none;
+  background: transparent;
+  border-radius: 9px;
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+.segmented-btn:hover { color: var(--text-primary); }
+.segmented-btn.active {
+  background: var(--accent-grad);
+  color: var(--text-on-grad);
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+}
+
+/* ----- 21. Chips (multi-select) ----- */
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.chip {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-elev);
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 13px;
+  transition: all 0.15s ease;
+}
+.chip:hover {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+.chip.active {
+  border-color: transparent;
+  background: var(--accent-grad);
+  color: var(--text-on-grad);
+  box-shadow: 0 4px 14px rgba(232, 121, 249, 0.32);
+}
+
+/* ----- 22. Manual block ----- */
+.manual-block {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background: linear-gradient(180deg, rgba(28, 23, 54, 0.55), rgba(12, 10, 24, 0.55));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  animation: manualIn 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes manualIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.manual-block-header { display: flex; flex-direction: column; gap: 2px; }
+.manual-block-header p { font-size: 12px; color: var(--text-muted); }
+.eyebrow-soft {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--accent-lilac);
+}
+.manual-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+/* ----- 23. Lightbox ----- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+.lightbox[hidden] { display: none; }
+.lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 6, 15, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.lightbox-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: 92vw;
+  max-height: 92vh;
+}
+.lightbox-content img {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 14px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+.lightbox-toolbar {
+  position: absolute;
+  top: -52px;
+  right: 0;
+  display: flex;
+  gap: 8px;
+}
+.lightbox-toolbar .icon-btn {
+  background: rgba(28, 23, 54, 0.9);
+  border-color: var(--border-strong);
+}
+.lightbox-caption {
+  color: var(--text-secondary);
+  font-size: 13px;
+  text-align: center;
+}
+
+/* ----- 24. Preview card com botão de seleção separado ----- */
+.grid-card.preview-card .grid-card-image { cursor: zoom-in; }
+.grid-card .card-select-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  background: rgba(7, 6, 15, 0.65);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: all 0.15s ease;
+}
+.grid-card .card-select-btn:hover {
+  background: rgba(28, 23, 54, 0.9);
+  border-color: var(--accent-lilac);
+}
+.grid-card.selected .card-select-btn {
+  background: var(--accent-grad);
+  border-color: transparent;
+  color: #fff;
+}
+/* desliga o ::after antigo nas preview-cards (a marcação vem do select-btn) */
+.grid-card.preview-card.selected::after { display: none; }
+
+/* Responsivo: 2col vira 1col em telas pequenas */
+@media (max-width: 880px) {
+  .flow-2col { grid-template-columns: 1fr; }
+  .lightbox-toolbar { top: 8px; right: 8px; }
+}
+
 /* Prefere reduzir movimento — desliga goo trail interativo */
 @media (prefers-reduced-motion: reduce) {
   .goo-bg { display: none; }

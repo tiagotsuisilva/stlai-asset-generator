@@ -1,53 +1,101 @@
 # Handoff — Resumo (lê este primeiro)
 
-> Atualizado em: 06/05/2026
+> Atualizado em: 07/05/2026
 > Para detalhes completos: [`HANDOFF.md`](./HANDOFF.md)
 
 ## Estado atual
 
-MVP completo, deployado, rodando em mock. **UI redesenhada (06/05)**: nova landing com dois fluxos, tema dark/premium com glow roxo/lilás/magenta, background reativo ao mouse. Falta popular dados reais e integrar Tripo.
+MVP completo, deployado, rodando em mock. **Reestruturação maior em 07/05**: 3 fluxos modulares (3D / 2D / Pose Transfer), Biblioteca C nova, blocos modulares de prompt (Acessórios / Estilo / Estética / Proporção / Realismo / Material / Técnico), upload clicável, lightbox no preview. Prompts definitivos serão fornecidos depois — toda a estrutura está pronta com placeholders.
 
 - **App**: https://stlai-asset-generator.vercel.app
 - **Repo**: https://github.com/tiagotsuisilva/stlai-asset-generator
 - **Local**: `C:\Users\tiago\Downloads\stlai-asset-generator\stlai-asset-generator`
 - **Demo Day**: 08/05/2026
 
-## Última mudança — Reestruturação visual + efeito água-viva (06/05/2026)
+## Última mudança — 3 fluxos modulares + Pose Transfer (07/05/2026)
 
-- App agora abre numa **landing page** dark/minimalista com dois cards principais:
-  - **3D CHARACTER FLOW** → tela com upload + bloco extra + botões Biblioteca A/B
-  - **2D CHARACTER FLOW** → tela com prompt textual + botão Biblioteca A
-- Telas: `screen-home` (landing), `screen-flow-3d`, `screen-flow-2d` + restante intacto.
-- CSS reescrito: tokens novos (dark, glows roxo/lilás/magenta), botões arredondados, cards com vidro fosco (backdrop-filter).
-- **Novo efeito de background "água-viva"** (substitui o spotlight simples):
-  - Goo/metaball via SVG (`feGaussianBlur` + `feColorMatrix` threshold).
-  - Trail de 12 blobs com easing decrescente — mouse parado vira bola pulsante; rápido forma cauda alongada.
-  - Cor reage à velocidade: violeta → magenta → coral.
-  - Implementado em `js/bg.js` (separado do `ui.js` por causa de limite de tamanho do disco).
-  - Desligado em mobile (<880px) e em `prefers-reduced-motion`.
-- Funcionalidade dos fluxos preservada (mesmos IDs, mesmas chamadas a `iniciarFluxo`).
-- Botão "Voltar" das telas internas (biblioteca/preview/result) volta pra flow screen ativa, não pra landing — preserva contexto.
+### Landing
+- 3 cards centrais: **3D Character Flow**, **2D Character Flow**, **Pose Transfer Flow**.
 
-## Arquivos novos / alterados
+### 3D Character Flow
+- Upload **clicável** (área substitui o botão UPLOAD antigo).
+- Removida Biblioteca B desta tela. Biblioteca A é a única.
+- Blocos modulares com state em `appState.threeDFlowOptions`:
+  - **Acessórios** (segmented, single): `keep` | `remove`.
+  - **Direção de estilo** (segmented, single): `image1` | `image2` | `manual`.
+  - Quando `manual`: aparece bloco com 5 sub-eixos em grid:
+    - **Estética** (chips, multi): cute / toy / premium_collectible / designer_toy / stylized_statue.
+    - **Proporção** (segmented, single): default | chibi.
+    - **Nível de realismo** (segmented, single): stylized | semi_realistic | realistic.
+    - **Material** (segmented, single): matte_vinyl | smooth_resin | painted_collectible_resin.
+    - **Regras técnicas** (chips, multi): print_friendly.
 
-- `index.html` — landing + screen-flow-3d + screen-flow-2d; inclui `js/bg.js`.
-- `css/style.css` — reescrito (tokens dark, landing, flow-screens, goo-bg).
-- `js/ui.js` — navegação landing/flows, back-home volta pra flow screen.
-- `js/bg.js` (novo) — efeito goo trail interativo.
+### 2D Character Flow
+- Layout em **2 colunas** com design dark:
+  - Esquerda: upload clicável + Biblioteca B (alimenta `fluxo3` — SVG textual).
+  - Direita: textarea + Biblioteca A (alimenta `fluxo2` — SVG por imagem).
+
+### Pose Transfer Flow (novo)
+- Tela própria com upload clicável + textarea + mesmos blocos modulares do 3D Flow (state em `appState.poseFlowOptions`).
+- Labels da Direção de estilo adaptadas: "Estilo do personagem / Estilo da pose / Escolher estilo".
+- Botão Biblioteca C abre poses; após geração, vai pro screen-preview com CTA "Baixar selecionadas".
+
+### Biblioteca C (nova)
+- `bibliotecaC/bibliotecaC.json` com 7 placeholders de pose (id, title, description, image, tags, poseType, visibilityType).
+- Sem imagens reais ainda — placeholders renderizam o SVG fallback do app.
+
+### Lightbox no preview
+- Click na imagem do preview/result → abre lightbox com botão de download.
+- Botão de seleção (checkmark circular) separado no canto superior esquerdo do card.
+
+### Prompts modulares (placeholders)
+- `docs/PROMPTS_TODO.md` — mapa completo de prompts futuros, com seção pra cada módulo + regras anti-interferência + conflitos conhecidos.
+- `js/prompts.js` — constantes placeholder pra todos os módulos. Substituir `[AGUARDANDO PROMPT DEFINITIVO]` quando os prompts forem aprovados.
+
+### API
+- `js/api.js` ganhou `gerarImagensFluxoPose` (mock + estrutura pronta pra prompt real).
+
+## Arquivos novos / alterados (07/05)
+
+- **Novos**:
+  - `bibliotecaC/bibliotecaC.json`
+  - `docs/PROMPTS_TODO.md`
+  - `js/ui-flows.js` (handlers modulares + lightbox + click-to-upload)
+- **Alterados**:
+  - `index.html` (3º card landing, novos screen-flow-3d / 2d / pose, lightbox)
+  - `css/style.css` (option-block, segmented, chips, manual-block, flow-2col, lightbox, upload-zone)
+  - `js/ui.js` (state expandido, biblioteca por fluxo, fluxoPose handler)
+  - `js/api.js` (gerarImagensFluxoPose)
+  - `js/prompts.js` (placeholders)
 
 ## Pendências críticas (bloqueantes pro Demo Day)
 
 1. Renomear 7 .jpg da Biblioteca A pros IDs corretos (lista no `HANDOFF.md`).
-2. Colar prompt completo do Fluxo 1 em `js/prompts.js` (placeholders `[COLAR AQUI: ...]`).
+2. **Escrever os prompts definitivos** em `js/prompts.js` substituindo os `[AGUARDANDO PROMPT DEFINITIVO]`. Mapa em `docs/PROMPTS_TODO.md`.
 3. Validar nome do modelo OpenAI (`gpt-image-2` vs `gpt-image-1`).
 4. Substituir stub `callTripoAPI()` pela integração real da STLFLIX.
 
 ## Pendências secundárias
 
 5. Popular Biblioteca B (11 imagens).
-6. Definir prompt do Fluxo 3.
-7. Smoke test final na URL pública (especialmente da nova landing/dark UI).
-8. Eventual refinamento das telas internas (biblioteca/preview/tripo) seguindo o novo visual — hoje já herdam tokens dark, mas podem ganhar polish.
+6. Popular Biblioteca C com imagens reais de poses (hoje só JSON placeholder).
+7. Smoke test final na URL pública (3 fluxos, blocos modulares, lightbox).
+8. Eventual refinamento das telas internas (biblioteca/preview/tripo) seguindo o novo visual.
+
+## State modular dos fluxos (referência rápida)
+
+```js
+appState.threeDFlowOptions = {
+  accessoriesMode: 'keep',           // keep | remove
+  styleSource: 'image1',             // image1 | image2 | manual
+  aestheticModifiers: [],            // multi: cute|toy|premium_collectible|designer_toy|stylized_statue
+  proportionPreset: 'default',       // default | chibi
+  realismLevel: 'stylized',          // stylized | semi_realistic | realistic
+  materialFinish: 'matte_vinyl',     // matte_vinyl | smooth_resin | painted_collectible_resin
+  technicalModifiers: [],            // multi: print_friendly
+};
+// appState.poseFlowOptions tem a mesma estrutura.
+```
 
 ## Como rodar local
 

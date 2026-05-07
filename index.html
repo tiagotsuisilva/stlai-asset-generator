@@ -74,10 +74,24 @@
           </button>
 
           <button type="button" class="flow-card" data-flow="2d" data-action="goto-flow-2d">
-            <span class="flow-card-tag">Fluxo só com prompt</span>
+            <span class="flow-card-tag">Fluxo 2D</span>
             <span class="flow-card-title">2D Character Flow</span>
             <span class="flow-card-desc">
-              Descreve o estilo desejado e gera SVGs estilizados a partir da Biblioteca A.
+              Sobe imagem + Biblioteca B, ou usa só prompt + Biblioteca A.
+            </span>
+            <span class="flow-card-arrow">
+              Iniciar
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </span>
+          </button>
+
+          <button type="button" class="flow-card" data-flow="pose" data-action="goto-flow-pose">
+            <span class="flow-card-tag">Transferência de pose</span>
+            <span class="flow-card-title">Pose Transfer Flow</span>
+            <span class="flow-card-desc">
+              Aplica o personagem do upload nas poses da Biblioteca C.
             </span>
             <span class="flow-card-arrow">
               Iniciar
@@ -97,7 +111,7 @@
           <div class="flow-screen-title">
             <span class="eyebrow">3D Character Flow</span>
             <h1>Importa a referência e escolhe a biblioteca</h1>
-            <p>Sobe a imagem-base, ajusta as instruções e dispara a geração com Biblioteca A ou B.</p>
+            <p>Sobe a imagem-base, ajusta as opções criativas e gera personagens 3D pela Biblioteca A.</p>
           </div>
           <button class="btn btn-ghost" data-action="back-landing">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -108,26 +122,18 @@
         </div>
 
         <div class="flow-panel">
-          <!-- Preview do upload -->
-          <div class="upload-preview" id="upload-preview">
-            <div class="upload-preview-empty">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2"/>
-                <circle cx="8.5" cy="8.5" r="1.5"/>
-                <polyline points="21 15 16 10 5 21"/>
+          <!-- Upload clicável -->
+          <div class="upload-zone" id="upload-zone-3d" data-target="file-input">
+            <div class="upload-zone-empty">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
               </svg>
-              <span>Pré-visualização da imagem</span>
+              <span class="upload-zone-title">Clique para enviar imagem</span>
+              <span class="upload-zone-hint">PNG, JPG ou WEBP — referência principal</span>
             </div>
           </div>
-
-          <label for="file-input" class="btn btn-upload" id="btn-upload">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-              <polyline points="17 8 12 3 7 8"/>
-              <line x1="12" y1="3" x2="12" y2="15"/>
-            </svg>
-            <span>UPLOAD</span>
-          </label>
           <input type="file" id="file-input" accept="image/*" hidden />
 
           <textarea
@@ -137,14 +143,108 @@
             rows="3"
           ></textarea>
 
-          <button type="button" class="btn btn-primary" id="btn-bib-a-fluxo1" disabled>
-            <span class="btn-title">Biblioteca A</span>
-            <span class="btn-subtitle">Fluxo 1 — Personagem 3D</span>
-          </button>
+          <!-- Bloco modular: Acessórios -->
+          <div class="option-block" data-block="accessories">
+            <div class="option-block-header">
+              <h3>Acessórios</h3>
+              <p>Defina se itens extras do personagem devem aparecer no resultado.</p>
+            </div>
+            <div class="segmented" role="radiogroup" aria-label="Acessórios" data-state-key="accessoriesMode" data-flow-state="threeDFlowOptions">
+              <button type="button" class="segmented-btn active" data-value="keep">Preservar acessórios</button>
+              <button type="button" class="segmented-btn" data-value="remove">Remover acessórios</button>
+            </div>
+          </div>
 
-          <button type="button" class="btn btn-primary" id="btn-bib-b-fluxo3" disabled>
-            <span class="btn-title">Biblioteca B</span>
-            <span class="btn-subtitle">Fluxo 3 — SVG textual</span>
+          <!-- Bloco modular: Direção de estilo -->
+          <div class="option-block" data-block="style-direction">
+            <div class="option-block-header">
+              <h3>Direção de estilo</h3>
+              <p>Escolha de onde vem a estética principal do resultado.</p>
+            </div>
+            <div class="segmented" role="radiogroup" aria-label="Direção de estilo" data-state-key="styleSource" data-flow-state="threeDFlowOptions" data-toggle-manual="manual-block-3d">
+              <button type="button" class="segmented-btn active" data-value="image1">Estilo da imagem 1</button>
+              <button type="button" class="segmented-btn" data-value="image2">Estilo da imagem 2</button>
+              <button type="button" class="segmented-btn" data-value="manual">Escolher estilo</button>
+            </div>
+          </div>
+
+          <!-- Blocos manuais (escondidos até styleSource = manual) -->
+          <div class="manual-block" id="manual-block-3d" hidden>
+            <div class="manual-block-header">
+              <span class="eyebrow-soft">Personalização manual</span>
+              <p>Combine os eixos abaixo pra construir a direção visual desejada.</p>
+            </div>
+
+            <div class="manual-grid">
+              <!-- Estética (multi) -->
+              <div class="option-block">
+                <div class="option-block-header">
+                  <h3>Estética</h3>
+                  <p>Direções visuais combináveis.</p>
+                </div>
+                <div class="chips" data-state-key="aestheticModifiers" data-flow-state="threeDFlowOptions" data-multi="true">
+                  <button type="button" class="chip" data-value="cute">Cute</button>
+                  <button type="button" class="chip" data-value="toy">Toy</button>
+                  <button type="button" class="chip" data-value="premium_collectible">Premium collectible</button>
+                  <button type="button" class="chip" data-value="designer_toy">Designer toy</button>
+                  <button type="button" class="chip" data-value="stylized_statue">Stylized statue</button>
+                </div>
+              </div>
+
+              <!-- Proporção (single) -->
+              <div class="option-block">
+                <div class="option-block-header">
+                  <h3>Proporção</h3>
+                  <p>Lógica padrão ou estilização forte.</p>
+                </div>
+                <div class="segmented" role="radiogroup" aria-label="Proporção" data-state-key="proportionPreset" data-flow-state="threeDFlowOptions">
+                  <button type="button" class="segmented-btn active" data-value="default">Padrão</button>
+                  <button type="button" class="segmented-btn" data-value="chibi">Chibi</button>
+                </div>
+              </div>
+
+              <!-- Realismo (single) -->
+              <div class="option-block">
+                <div class="option-block-header">
+                  <h3>Nível de realismo</h3>
+                  <p>Eixo próprio — pode conflitar com toy/chibi.</p>
+                </div>
+                <div class="segmented" role="radiogroup" aria-label="Realismo" data-state-key="realismLevel" data-flow-state="threeDFlowOptions">
+                  <button type="button" class="segmented-btn active" data-value="stylized">Estilizado</button>
+                  <button type="button" class="segmented-btn" data-value="semi_realistic">Semi-realistic</button>
+                  <button type="button" class="segmented-btn" data-value="realistic">Realistic</button>
+                </div>
+              </div>
+
+              <!-- Material (single) -->
+              <div class="option-block">
+                <div class="option-block-header">
+                  <h3>Material</h3>
+                  <p>Acabamento principal do personagem.</p>
+                </div>
+                <div class="segmented" role="radiogroup" aria-label="Material" data-state-key="materialFinish" data-flow-state="threeDFlowOptions">
+                  <button type="button" class="segmented-btn active" data-value="matte_vinyl">Matte vinyl</button>
+                  <button type="button" class="segmented-btn" data-value="smooth_resin">Smooth resin</button>
+                  <button type="button" class="segmented-btn" data-value="painted_collectible_resin">Painted resin</button>
+                </div>
+              </div>
+
+              <!-- Técnico (multi) -->
+              <div class="option-block">
+                <div class="option-block-header">
+                  <h3>Regras técnicas</h3>
+                  <p>Ajustes para impressão 3D.</p>
+                </div>
+                <div class="chips" data-state-key="technicalModifiers" data-flow-state="threeDFlowOptions" data-multi="true">
+                  <button type="button" class="chip" data-value="print_friendly">3D print friendly</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-primary" id="btn-bib-a-fluxo1" disabled>
+            <span class="btn-title">Abrir Biblioteca A</span>
+            <span class="btn-subtitle">Selecione personagens pra gerar</span>
           </button>
         </div>
       </div>
@@ -152,12 +252,72 @@
 
     <!-- ========== TELA 1B — FLUXO 2D ========== -->
     <section id="screen-flow-2d" class="screen">
-      <div class="flow-screen">
+      <div class="flow-screen flow-screen-wide">
         <div class="flow-screen-header">
           <div class="flow-screen-title">
             <span class="eyebrow">2D Character Flow</span>
-            <h1>Define o estilo via prompt</h1>
-            <p>Cola o prompt que descreve o visual do SVG e gera a partir da Biblioteca A.</p>
+            <h1>Sobe imagem ou descreve o estilo</h1>
+            <p>Lado esquerdo: upload + Biblioteca B. Lado direito: prompt + Biblioteca A.</p>
+          </div>
+          <button class="btn btn-ghost" data-action="back-landing">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+            </svg>
+            Voltar
+          </button>
+        </div>
+
+        <div class="flow-2col">
+          <div class="flow-panel">
+            <div class="flow-panel-header">
+              <h3>Com upload</h3>
+              <p>Sobe uma imagem que define o estilo visual e gera SVGs a partir da Biblioteca B.</p>
+            </div>
+
+            <div class="upload-zone" id="upload-zone-2d" data-target="file-input-2d">
+              <div class="upload-zone-empty">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+                <span class="upload-zone-title">Clique para enviar imagem</span>
+                <span class="upload-zone-hint">Define o estilo visual do SVG</span>
+              </div>
+            </div>
+            <input type="file" id="file-input-2d" accept="image/*" hidden />
+
+            <button type="button" class="btn btn-primary" id="btn-bib-b-fluxo3" disabled>
+              <span class="btn-title">Abrir Biblioteca B</span>
+              <span class="btn-subtitle">Fluxo 3 — SVG textual</span>
+            </button>
+          </div>
+
+          <div class="flow-panel">
+            <div class="flow-panel-header">
+              <h3>Apenas prompt</h3>
+              <p>Descreve o estilo desejado e gera SVGs estilizados a partir da Biblioteca A.</p>
+            </div>
+
+            <textarea id="prompt-fluxo2" class="input prompt-fluxo2" placeholder="Cole o prompt que define o estilo do SVG. Ex: outline em traços finos, fundo transparente, paleta azul-magenta, formato collectible..." rows="14"></textarea>
+
+            <button type="button" class="btn btn-primary" id="btn-bib-a-fluxo2" disabled>
+              <span class="btn-title">Abrir Biblioteca A</span>
+              <span class="btn-subtitle">Fluxo 2 — SVG por imagem</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== TELA 1C — POSE TRANSFER FLOW ========== -->
+    <section id="screen-flow-pose" class="screen">
+      <div class="flow-screen">
+        <div class="flow-screen-header">
+          <div class="flow-screen-title">
+            <span class="eyebrow">Pose Transfer Flow</span>
+            <h1>Aplica seu personagem nas poses da Biblioteca C</h1>
+            <p>Sobe o personagem, ajusta as opções criativas e escolhe as poses pra transferir.</p>
           </div>
           <button class="btn btn-ghost" data-action="back-landing">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -168,16 +328,100 @@
         </div>
 
         <div class="flow-panel">
-          <textarea
-            id="prompt-fluxo2"
-            class="input prompt-fluxo2"
-            placeholder="Cole aqui o prompt que define o estilo do SVG. Ex: outline em traços finos, fundo transparente, paleta azul-magenta, formato collectible..."
-            rows="14"
-          ></textarea>
+          <div class="upload-zone" id="upload-zone-pose" data-target="file-input-pose">
+            <div class="upload-zone-empty">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              <span class="upload-zone-title">Clique para enviar o personagem</span>
+              <span class="upload-zone-hint">Personagem que receberá as novas poses</span>
+            </div>
+          </div>
+          <input type="file" id="file-input-pose" accept="image/*" hidden />
 
-          <button type="button" class="btn btn-primary" id="btn-bib-a-fluxo2" disabled>
-            <span class="btn-title">Biblioteca A</span>
-            <span class="btn-subtitle">Fluxo 2 — SVG por imagem</span>
+          <textarea id="bloco-extra-pose" class="input bloco-extra" placeholder="Instruções adicionais (opcional) — ex: ajustar expressão facial, manter elementos da paleta..." rows="3"></textarea>
+
+          <div class="option-block" data-block="accessories">
+            <div class="option-block-header">
+              <h3>Acessórios</h3>
+              <p>Defina se itens extras do personagem devem aparecer no resultado.</p>
+            </div>
+            <div class="segmented" role="radiogroup" data-state-key="accessoriesMode" data-flow-state="poseFlowOptions">
+              <button type="button" class="segmented-btn active" data-value="keep">Preservar acessórios</button>
+              <button type="button" class="segmented-btn" data-value="remove">Remover acessórios</button>
+            </div>
+          </div>
+
+          <div class="option-block" data-block="style-direction">
+            <div class="option-block-header">
+              <h3>Direção de estilo</h3>
+              <p>De onde vem a estética principal do resultado.</p>
+            </div>
+            <div class="segmented" role="radiogroup" data-state-key="styleSource" data-flow-state="poseFlowOptions" data-toggle-manual="manual-block-pose">
+              <button type="button" class="segmented-btn active" data-value="image1">Estilo do personagem</button>
+              <button type="button" class="segmented-btn" data-value="image2">Estilo da pose</button>
+              <button type="button" class="segmented-btn" data-value="manual">Escolher estilo</button>
+            </div>
+          </div>
+
+          <div class="manual-block" id="manual-block-pose" hidden>
+            <div class="manual-block-header">
+              <span class="eyebrow-soft">Personalização manual</span>
+              <p>Combine os eixos abaixo pra construir a direção visual desejada.</p>
+            </div>
+
+            <div class="manual-grid">
+              <div class="option-block">
+                <div class="option-block-header"><h3>Estética</h3><p>Direções visuais combináveis.</p></div>
+                <div class="chips" data-state-key="aestheticModifiers" data-flow-state="poseFlowOptions" data-multi="true">
+                  <button type="button" class="chip" data-value="cute">Cute</button>
+                  <button type="button" class="chip" data-value="toy">Toy</button>
+                  <button type="button" class="chip" data-value="premium_collectible">Premium collectible</button>
+                  <button type="button" class="chip" data-value="designer_toy">Designer toy</button>
+                  <button type="button" class="chip" data-value="stylized_statue">Stylized statue</button>
+                </div>
+              </div>
+
+              <div class="option-block">
+                <div class="option-block-header"><h3>Proporção</h3><p>Lógica padrão ou estilização forte.</p></div>
+                <div class="segmented" role="radiogroup" data-state-key="proportionPreset" data-flow-state="poseFlowOptions">
+                  <button type="button" class="segmented-btn active" data-value="default">Padrão</button>
+                  <button type="button" class="segmented-btn" data-value="chibi">Chibi</button>
+                </div>
+              </div>
+
+              <div class="option-block">
+                <div class="option-block-header"><h3>Nível de realismo</h3><p>Eixo próprio — pode conflitar com toy/chibi.</p></div>
+                <div class="segmented" role="radiogroup" data-state-key="realismLevel" data-flow-state="poseFlowOptions">
+                  <button type="button" class="segmented-btn active" data-value="stylized">Estilizado</button>
+                  <button type="button" class="segmented-btn" data-value="semi_realistic">Semi-realistic</button>
+                  <button type="button" class="segmented-btn" data-value="realistic">Realistic</button>
+                </div>
+              </div>
+
+              <div class="option-block">
+                <div class="option-block-header"><h3>Material</h3><p>Acabamento principal do personagem.</p></div>
+                <div class="segmented" role="radiogroup" data-state-key="materialFinish" data-flow-state="poseFlowOptions">
+                  <button type="button" class="segmented-btn active" data-value="matte_vinyl">Matte vinyl</button>
+                  <button type="button" class="segmented-btn" data-value="smooth_resin">Smooth resin</button>
+                  <button type="button" class="segmented-btn" data-value="painted_collectible_resin">Painted resin</button>
+                </div>
+              </div>
+
+              <div class="option-block">
+                <div class="option-block-header"><h3>Regras técnicas</h3><p>Ajustes para impressão 3D.</p></div>
+                <div class="chips" data-state-key="technicalModifiers" data-flow-state="poseFlowOptions" data-multi="true">
+                  <button type="button" class="chip" data-value="print_friendly">3D print friendly</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-primary" id="btn-bib-c-fluxo-pose" disabled>
+            <span class="btn-title">Abrir Biblioteca C</span>
+            <span class="btn-subtitle">Selecione poses pra transferir</span>
           </button>
         </div>
       </div>
@@ -407,10 +651,33 @@
     </div>
   </div>
 
+  <!-- ========================== LIGHTBOX ========================== -->
+  <div id="lightbox" class="lightbox" hidden>
+    <div class="lightbox-backdrop" data-action="close-lightbox"></div>
+    <div class="lightbox-content">
+      <div class="lightbox-toolbar">
+        <button class="icon-btn" id="btn-lightbox-download" title="Baixar imagem">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+        </button>
+        <button class="icon-btn" data-action="close-lightbox" title="Fechar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <img id="lightbox-image" alt="" />
+      <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+  </div>
+
+  
+
   <!-- ========================== EXTERNAL LIBS ========================== -->
-  <!-- JSZip — empacotamento dos outputs -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <!-- ImageTracer — conversão raster → SVG -->
   <script src="https://cdn.jsdelivr.net/gh/jankovicsandras/imagetracerjs@1.2.6/imagetracer_v1.2.6.js"></script>
 
   <!-- ========================== APP ========================== -->
@@ -419,5 +686,6 @@
   <script src="js/api.js"></script>
   <script src="js/bg.js"></script>
   <script src="js/ui.js"></script>
+  <script src="js/ui-flows.js"></script>
 </body>
 </html>

@@ -8,21 +8,51 @@
 
 const appState = {
   currentScreen: 'home',
-  currentFlow: null,        // 'fluxo1' | 'fluxo2' | 'fluxo3'
-  currentFlowScreen: null,  // 'flow-3d' | 'flow-2d'
+  currentFlow: null,        // 'fluxo1' | 'fluxo2' | 'fluxo3' | 'fluxoPose'
+  currentFlowScreen: null,  // 'flow-3d' | 'flow-2d' | 'flow-pose'
 
-  uploadedImage: null,
-  blocoExtra: '',
+  // Uploads
+  uploadedImage: null,       // upload do 3D Flow
+  uploadedImage2D: null,     // upload do 2D Flow (lado esquerdo, alimenta fluxo3)
+  uploadedImagePose: null,   // upload do Pose Transfer Flow
+
+  blocoExtra: '',            // textarea do 3D Flow
+  blocoExtraPose: '',        // textarea do Pose Flow
   promptFluxo2: '',
 
+  // Bibliotecas
   bibliotecaA: [],
   bibliotecaB: [],
+  bibliotecaC: [],
 
   bibliotecaSelection: [],
   generatedImages: [],
   selectedForTripo: [],
   generatedSvgs: [],
   generated3D: [],
+  generatedPose: [],         // resultados do fluxoPose
+
+  // Estado modular do 3D Flow
+  threeDFlowOptions: {
+    accessoriesMode: 'keep',
+    styleSource: 'image1',
+    aestheticModifiers: [],
+    proportionPreset: 'default',
+    realismLevel: 'stylized',
+    materialFinish: 'matte_vinyl',
+    technicalModifiers: [],
+  },
+
+  // Estado modular do Pose Flow (mesma estrutura)
+  poseFlowOptions: {
+    accessoriesMode: 'keep',
+    styleSource: 'image1',
+    aestheticModifiers: [],
+    proportionPreset: 'default',
+    realismLevel: 'stylized',
+    materialFinish: 'matte_vinyl',
+    technicalModifiers: [],
+  },
 
   tripoParams: {
     versao: 'standard',
@@ -63,6 +93,9 @@ function bindLandingEvents() {
   document.querySelectorAll('[data-action="goto-flow-2d"]').forEach(btn => {
     btn.addEventListener('click', () => abrirFlowScreen('flow-2d'));
   });
+  document.querySelectorAll('[data-action="goto-flow-pose"]').forEach(btn => {
+    btn.addEventListener('click', () => abrirFlowScreen('flow-pose'));
+  });
   document.querySelectorAll('[data-action="back-landing"]').forEach(btn => {
     btn.addEventListener('click', () => showScreen('home'));
   });
@@ -100,12 +133,14 @@ function atualizarMockBadge() {
 
 async function carregarBibliotecas() {
   try {
-    const [a, b] = await Promise.all([
+    const [a, b, c] = await Promise.all([
       fetch('bibliotecaA/bibliotecaA.json').then(r => r.json()),
       fetch('bibliotecaB/bibliotecaB.json').then(r => r.json()),
+      fetch('bibliotecaC/bibliotecaC.json').then(r => r.json()).catch(() => []),
     ]);
     appState.bibliotecaA = a;
     appState.bibliotecaB = b;
+    appState.bibliotecaC = c;
   } catch (e) {
     console.error('Falha ao carregar bibliotecas:', e);
     showToast('Falha ao carregar bibliotecas. Verifique os arquivos JSON.', 'error');
@@ -148,7 +183,10 @@ function bindHomeEvents() {
 }
 
 function renderUploadPreview() {
-  const el = document.getElementById('upload-preview');
+  // Tenta primeiro a nova upload-zone-3d; cai pra upload-preview legado se existir
+  const el = document.getElementById('upload-zone-3d') || document.getElementById('upload-preview');
+  if (!el) return;
+  el.classList.add('has-image');
   el.innerHTML = `<img src="${appState.uploadedImage.dataUrl}" alt="Upload preview" />`;
 }
 
@@ -169,23 +207,28 @@ function iniciarFluxo(fluxo) {
   appState.bibliotecaSelection = [];
 
   const titles = {
-    fluxo1: { title: 'Biblioteca A', sub: 'Fluxo 1 — Personagem 3D' },
-    fluxo2: { title: 'Biblioteca A', sub: 'Fluxo 2 — SVG por imagem' },
-    fluxo3: { title: 'Biblioteca B', sub: 'Fluxo 3 — SVG textual' },
+    fluxo1:    { title: 'Biblioteca A', sub: '3D Character Flow — escolha personagens' },
+    fluxo2:    { title: 'Biblioteca A', sub: '2D Character Flow — SVG por imagem' },
+    fluxo3:    { title: 'Biblioteca B', sub: '2D Character Flow — SVG textual' },
+    fluxoPose: { title: 'Biblioteca C', sub: 'Pose Transfer Flow — escolha as poses' },
   };
-  const t = titles[fluxo];
+  const t = titles[fluxo] || { title: 'Biblioteca', sub: '' };
   document.getElementById('biblioteca-title').textContent = t.title;
   document.getElementById('biblioteca-subtitle').textContent = t.sub;
 
   const max = window.CONFIG.MAX_ITEMS_POR_GERACAO;
   document.getElementById('biblioteca-max').textContent = max;
 
-  const itens = (fluxo === 'fluxo3') ? appState.bibliotecaB : appState.bibliotecaA;
+  // Biblioteca correta por fluxo
+  let itens = appState.bibliotecaA;
+  if (fluxo === 'fluxo3') itens = appState.bibliotecaB;
+  else if (fluxo === 'fluxoPose') itens = appState.bibliotecaC;
+
   renderBiblioteca(itens);
 
   const btn = document.getElementById('btn-gerar');
   btn.querySelector('.btn-title').textContent =
-    (fluxo === 'fluxo1') ? 'Gerar imagens' : 'Gerar';
+    (fluxo === 'fluxo1' || fluxo === 'fluxoPose') ? 'Gerar imagens' : 'Gerar';
 
   atualizarSelecaoBiblioteca();
   showScreen('biblioteca');
@@ -195,16 +238,21 @@ function renderBiblioteca(itens) {
   const grid = document.getElementById('biblioteca-grid');
   grid.innerHTML = '';
   itens.forEach((item) => {
+    // Compatibilidade: Bib A/B usam {nome, arquivo, categoria}; Bib C usa {title, image, visibilityType}
+    const nome = item.nome || item.title || item.id;
+    const arquivo = item.arquivo || item.image || '';
+    const meta = item.categoria || item.visibilityType || '';
+
     const card = document.createElement('div');
     card.className = 'grid-card';
     card.dataset.id = item.id;
     card.innerHTML = `
       <div class="grid-card-image">
-        <img src="${item.arquivo}" alt="${item.nome}" onerror="this.style.display='none'; this.parentElement.innerHTML = window.uiPlaceholderSVG('${escapeHtml(item.nome)}');" />
+        <img src="${arquivo}" alt="${nome}" onerror="this.style.display='none'; this.parentElement.innerHTML = window.uiPlaceholderSVG('${escapeHtml(nome)}');" />
       </div>
       <div class="grid-card-info">
-        <div class="grid-card-name">${escapeHtml(item.nome)}</div>
-        <div class="grid-card-meta">${escapeHtml(item.categoria || '')}</div>
+        <div class="grid-card-name">${escapeHtml(nome)}</div>
+        <div class="grid-card-meta">${escapeHtml(meta)}</div>
       </div>
     `;
     card.addEventListener('click', () => toggleSelecao(item, card));
@@ -269,14 +317,28 @@ async function executarGeracao() {
       renderResultadoSvg('Fluxo 2 — SVG por imagem');
       showScreen('result');
     } else if (fluxo === 'fluxo3') {
+      // Fluxo 3 usa o upload do 2D Flow (lado esquerdo)
       const results = await window.api.gerarImagensFluxo3({
-        uploadDataUrl: appState.uploadedImage?.dataUrl,
+        uploadDataUrl: appState.uploadedImage2D?.dataUrl,
         itensBiblioteca: itens,
         onProgress: atualizarProgresso,
       });
       appState.generatedSvgs = results;
       renderResultadoSvg('Fluxo 3 — SVG textual');
       showScreen('result');
+    } else if (fluxo === 'fluxoPose') {
+      const results = await window.api.gerarImagensFluxoPose({
+        uploadDataUrl: appState.uploadedImagePose?.dataUrl,
+        blocoExtra: appState.blocoExtraPose,
+        itensBiblioteca: itens,
+        opcoes: appState.poseFlowOptions,
+        onProgress: atualizarProgresso,
+      });
+      appState.generatedImages = results;       // reusa screen-preview do fluxo1
+      appState.generatedPose = results;
+      appState.selectedForTripo = [];
+      renderPreview();
+      showScreen('preview');
     }
   } catch (e) {
     console.error(e);
@@ -559,7 +621,7 @@ function salvarSettings() {
   });
   fecharSettings();
   atualizarMockBadge();
-  showToast('Configurações salvas.', 'success');
+  showToast('Configuracoes salvas.', 'success');
 }
 
 
@@ -567,8 +629,10 @@ function salvarSettings() {
 
 function bindGlobalEvents() {
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !document.getElementById('settings-modal').hidden) {
-      fecharSettings();
+    if (e.key === 'Escape') {
+      if (!document.getElementById('settings-modal').hidden) fecharSettings();
+      const lb = document.getElementById('lightbox');
+      if (lb && !lb.hidden && window.uiLightbox) window.uiLightbox.close();
     }
   });
 }
@@ -577,17 +641,16 @@ function bindGlobalEvents() {
 /* ===== UTIL ============================================== */
 
 function escapeHtml(s) {
-  return String(s ?? '').replace(/[&<>"']/g, c =>
+  return String(s ?? '').replace(/[&<>"\']/g, c =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])
   );
 }
 
+window.escapeHtml = escapeHtml;
+
 window.uiPlaceholderSVG = function (label) {
   const safe = escapeHtml(label);
   return `<svg class="placeholder-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-    <defs><linearGradient id="ph${Math.random().toString(36).slice(2)}" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#9d4edd"/><stop offset="100%" stop-color="#e879f9"/>
-    </linearGradient></defs>
     <rect width="100" height="100" fill="#1c1736"/>
     <circle cx="50" cy="42" r="20" fill="#7c3aed" opacity="0.6"/>
     <text x="50" y="78" text-anchor="middle" font-family="Inter,sans-serif" font-size="6" fill="#b8b2d9">${safe}</text>

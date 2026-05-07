@@ -311,6 +311,69 @@ async function gerarImagensFluxo3({ uploadDataUrl, itensBiblioteca, onProgress }
 }
 
 
+/**
+ * POSE TRANSFER FLOW — aplica o personagem do upload nas poses
+ * selecionadas da Biblioteca C.
+ *
+ * Estrutura conceitual (prompt definitivo: AGUARDANDO):
+ *   - Image 1 = imagem da Biblioteca C (POSE / estrutura / câmera).
+ *   - Image 2 = upload do usuário (IDENTIDADE / aparência).
+ *
+ * `opcoes` traz o state modular do POSE TRANSFER FLOW (acessórios,
+ * direção de estilo, blocos manuais). Será concatenado pelos
+ * módulos de prompt no futuro.
+ *
+ * Retorna array de { sourceItem, dataUrl }.
+ */
+async function gerarImagensFluxoPose({ uploadDataUrl, blocoExtra, itensBiblioteca, opcoes, onProgress }) {
+  // Prompt final ainda não definido — usar placeholder no real e mock no mock mode.
+  const promptBase = (window.PROMPT_POSE_TRANSFER_BASE && window.PROMPT_POSE_TRANSFER_BASE !== '[AGUARDANDO PROMPT DEFINITIVO]')
+    ? window.PROMPT_POSE_TRANSFER_BASE
+    : 'Apply the identity from Image 2 onto the pose/structure of Image 1. Preserve crop, framing, and visibility from Image 1. Do not invent body parts that are not visible in Image 1.';
+
+  const results = [];
+  const charBlob = uploadDataUrl ? dataURLToBlob(uploadDataUrl) : null;
+
+  for (let i = 0; i < itensBiblioteca.length; i++) {
+    const item = itensBiblioteca[i];
+    onProgress?.(i, itensBiblioteca.length, item.title || item.nome);
+
+    try {
+      let dataUrl;
+      if (window.isMockMode() || !charBlob) {
+        await sleep(400);
+        dataUrl = mockImage(item.title || item.nome || 'Pose', 'Pose Transfer (mock)');
+      } else {
+        const poseDataUrl = await loadImageAsDataURL(item.image || item.arquivo);
+        const poseBlob = dataURLToBlob(poseDataUrl);
+        dataUrl = await callOpenAIImageGenFluxo1({
+          imagemRefBlob: poseBlob,    // pose = blueprint
+          imagemBibBlob: charBlob,    // upload = identidade
+          prompt: promptBase + (blocoExtra ? `\n\nUSER ADDITIONAL: ${blocoExtra}` : ''),
+        });
+      }
+      // Normaliza pra { sourceItem: { id, nome, ...} } pro preview
+      const sourceItem = {
+        id: item.id,
+        nome: item.title || item.nome,
+        ...item,
+      };
+      results.push({ sourceItem, dataUrl });
+    } catch (e) {
+      console.error('Pose Transfer falhou para', item.id, e);
+      results.push({
+        sourceItem: { id: item.id, nome: item.title || item.nome, ...item },
+        dataUrl: mockImage(item.title || item.nome, 'Erro — mock'),
+        error: e.message,
+      });
+    }
+  }
+
+  onProgress?.(itensBiblioteca.length, itensBiblioteca.length, 'Concluído');
+  return results;
+}
+
+
 /* ===== TRIPO ============================================= */
 
 /**
@@ -360,44 +423,27 @@ async function gerar3DTripo({ imagensSelecionadas, parametros, onProgress }) {
  * existente na STLFLIX (mesma key, mesmos parâmetros).
  */
 async function callTripoAPI(imageDataUrl, parametros) {
-  // Exemplo ilustrativo — reaproveitar código do MVP atual.
-  // const resp = await fetch('https://api.tripo3d.ai/...', {
-  //   method: 'POST',
-  //   headers: {
-  //     'Authorization': `Bearer ${window.CONFIG.TRIPO_API_KEY}`,
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify({ image: imageDataUrl, ...parametros }),
-  // });
-  // const data = await resp.json();
-  // const modelResp = await fetch(data.model_url);
-  // return await modelResp.blob();
+  // Substituir pela integração real do MVP existente da STLFLIX.
   throw new Error('STUB: substitua callTripoAPI() pela integração real.');
 }
 
 
 /* ===== CONVERSOR SVG (ImageTracer) ======================= */
 
-/**
- * Converte um dataURL (PNG) para string SVG usando ImageTracer.js.
- * Carregada via CDN no index.html.
- */
 async function converterParaSVG(imageDataUrl, label = 'svg') {
   if (window.isMockMode()) {
     await sleep(150);
     return mockSVG(label);
   }
   if (typeof ImageTracer === 'undefined') {
-    console.warn('ImageTracer não carregou; voltando pra mock SVG.');
+    console.warn('ImageTracer nao carregou; voltando pra mock SVG.');
     return mockSVG(label);
   }
-
   return new Promise((resolve) => {
     try {
       ImageTracer.imageToSVG(
         imageDataUrl,
         (svgString) => resolve(svgString),
-        // Preset: maior fidelidade, paleta reduzida — bom equilíbrio pro MVP.
         { numberofcolors: 8, mincolorratio: 0.02, ltres: 1, qtres: 1 }
       );
     } catch (e) {
@@ -410,10 +456,6 @@ async function converterParaSVG(imageDataUrl, label = 'svg') {
 
 /* ===== EMPACOTAMENTO ZIP ================================== */
 
-/**
- * Empacota um conjunto de arquivos em ZIP via JSZip.
- * `arquivos` é um array de { caminho: string, conteudo: Blob | string }.
- */
 async function empacotarZip(arquivos, nomeBase = 'stlai-output') {
   const zip = new JSZip();
   for (const a of arquivos) {
@@ -443,6 +485,7 @@ window.api = {
   gerarImagensFluxo1,
   gerarImagensFluxo2,
   gerarImagensFluxo3,
+  gerarImagensFluxoPose,
   gerar3DTripo,
   converterParaSVG,
   empacotarZip,

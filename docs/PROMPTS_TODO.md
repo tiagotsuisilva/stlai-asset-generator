@@ -9,15 +9,15 @@
 |---|---|---|---|
 | 1 | 3D Character Flow | `accessoriesMode = "keep"` + `styleSource = "image1"` | `PROMPT_3D_CASE_KEEP_IMAGE1` em `js/prompts.js` |
 | 2 | 3D Character Flow | `accessoriesMode = "remove"` + `styleSource = "image1"` | `PROMPT_3D_CASE_REMOVE_IMAGE1` em `js/prompts.js` |
+| 3 | 3D Character Flow | `accessoriesMode = "remove"` + `styleSource = "image2"` | `PROMPT_3D_CASE_REMOVE_IMAGE2` em `js/prompts.js` |
 
 Roteamento atual:
 - `js/api.js → gerarImagensFluxo1` chama `window.build3DCharacterPrompt(opcoes, blocoExtra)`.
-- O builder usa um **lookup table** com chave `${accessoriesMode}__${styleSource}`. Hoje resolvem: `keep__image1`, `remove__image1`.
+- O builder usa um **lookup table** com chave `${accessoriesMode}__${styleSource}`. Hoje resolvem: `keep__image1`, `remove__image1`, `remove__image2`.
 - Demais combinações caem num placeholder `[AGUARDANDO PROMPT DEFINITIVO PARA: ...]` e logam um warning no console — sinalizando que esse caso ainda precisa de prompt.
 
 Próximos casos prioritários a escrever (sugestão):
 - `keep` + `image2`
-- `remove` + `image2`
 - `manual` (definir sub-casos relevantes — provavelmente um por combinação de Estética × Proporção × Realismo × Material).
 
 > Documento serve como mapa dos prompts que serão escritos depois (fora do Claude). Não escrever prompts finais aqui — só preencher quando aprovados.

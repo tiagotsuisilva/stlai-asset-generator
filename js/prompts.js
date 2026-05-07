@@ -366,6 +366,116 @@ GLOBAL DO NOTS
 - do not create a base unless it is supported by Image 1`;
 
 
+// CASO 3 — accessoriesMode = "remove" + styleSource = "image2"
+// Image 1 = estrutura. Image 2 = identidade + estilo (sem acessórios externos).
+const PROMPT_3D_CASE_REMOVE_IMAGE2 = `MULTI-IMAGE INSTRUCTION — 3D CHARACTER FLOW
+You will use TWO input images with different functions.
+
+FINAL OUTPUT REQUIREMENT
+Generate a SINGLE final image only.
+Do not output text, labels, panels, or multiple views.
+
+IMAGE ROLE LOGIC
+
+IMAGE 1 = STRUCTURE SOURCE
+Use Image 1 for:
+- pose
+- posture
+- body visibility
+- crop
+- framing
+- camera angle
+- composition
+- silhouette
+- visible body proportions
+- support logic
+- presence or absence of base or support surface
+Image 1 defines the structural logic of the final result.
+Do not use Image 1 as the identity source.
+Do not use Image 1 as the visual style source in this case.
+
+IMAGE 2 = CHARACTER IDENTITY AND STYLE SOURCE
+Use Image 2 for:
+- character identity
+- face and facial features
+- hairstyle or hair absence
+- facial hair or lack of facial hair
+- expression
+- outfit / costume / armor / clothing
+- colors
+- recognizable visual traits
+- core body appearance
+- essential clothing and identity-defining visual elements
+- primary visual style language
+Also use Image 2 as the main style source for:
+- stylization level
+- shape language
+- material feel
+- simplification level
+- surface treatment
+- overall visual treatment
+Do not use Image 2 to define pose, framing, crop, or composition.
+Do not preserve non-essential accessories or detachable props from Image 2 in this case.
+
+CORE GOAL
+Create a polished 3D character render that:
+- follows the structural logic of Image 1
+- preserves the character identity from Image 2
+- follows the visual style language of Image 2
+- removes non-essential accessories and detachable props from Image 2
+
+STRUCTURE RULES
+- Match the visible pose and body logic of Image 1.
+- Respect the visible crop from Image 1.
+- If Image 1 shows only bust, generate only bust.
+- If Image 1 shows half body, generate only half body.
+- If Image 1 crops the body, respect the same crop.
+- Do not invent missing anatomy.
+- Do not force full body.
+- Do not force feet, legs, hands, base, or props unless supported by Image 1.
+- Do not force seated pose, standing pose, action pose, or display base unless supported by Image 1.
+
+STYLE RULES
+- Use Image 2 as the main visual style source.
+- Transfer the aesthetic language of Image 2, including stylization level, material feel, shape simplification, surface treatment, and overall visual treatment.
+- Do not transfer pose, framing, or composition from Image 2.
+
+CHARACTER IDENTITY RULES
+- Preserve the target character identity from Image 2.
+- Preserve face, hair, outfit, colors, and recognizable character traits from Image 2.
+- Preserve essential clothing and identity-defining outfit elements.
+- Do not merge identities between Image 1 and Image 2.
+- The final result must clearly read as the character from Image 2.
+
+ACCESSORIES RULE
+- Remove non-essential accessories and detachable props from the final result.
+- Do not include handheld props, weapons, shields, bags, tools, or external removable items from Image 2.
+- Preserve the core character identity, face, hair, outfit, body, colors, and essential clothing.
+- Do not remove elements that are clearly part of the main outfit or core character identity.
+- If an item is structurally required by Image 1, preserve only the structural logic from Image 1, not the identity or design of any accessory from Image 1.
+
+DEFAULT PRESENTATION
+- polished 3D render
+- collectible-quality finish
+- clean shapes
+- readable silhouette
+- clean lighting
+- uncluttered presentation
+
+GLOBAL DO NOTS
+- do not generate multiple views
+- do not generate a turnaround sheet
+- do not output text
+- do not use Image 1 as identity source
+- do not use Image 1 as visual style source in this case
+- do not preserve non-essential accessories from Image 2
+- do not force a pose that is not supported by Image 1
+- do not invent missing body parts
+- do not add random scenery or props
+- do not crop unexpectedly
+- do not create a base unless it is supported by Image 1`;
+
+
 /**
  * Builder do prompt do 3D CHARACTER FLOW.
  * Lida apenas com o primeiro caso consolidado por enquanto.
@@ -377,6 +487,7 @@ function build3DCharacterPrompt(opcoes, blocoExtra) {
   const cases = {
     'keep__image1':   PROMPT_3D_CASE_KEEP_IMAGE1,
     'remove__image1': PROMPT_3D_CASE_REMOVE_IMAGE1,
+    'remove__image2': PROMPT_3D_CASE_REMOVE_IMAGE2,
   };
   const key = `${o.accessoriesMode}__${o.styleSource}`;
 
@@ -425,4 +536,5 @@ window.PROMPT_MODULE_TECHNICAL_PRINT_FRIENDLY = PROMPT_MODULE_TECHNICAL_PRINT_FR
 window.PROMPT_GLOBAL_ANTI_INTERFERENCE = PROMPT_GLOBAL_ANTI_INTERFERENCE;
 window.PROMPT_3D_CASE_KEEP_IMAGE1 = PROMPT_3D_CASE_KEEP_IMAGE1;
 window.PROMPT_3D_CASE_REMOVE_IMAGE1 = PROMPT_3D_CASE_REMOVE_IMAGE1;
+window.PROMPT_3D_CASE_REMOVE_IMAGE2 = PROMPT_3D_CASE_REMOVE_IMAGE2;
 window.build3DCharacterPrompt = build3DCharacterPrompt;

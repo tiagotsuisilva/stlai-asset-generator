@@ -7,13 +7,20 @@
 
 MVP completo, deployado, rodando em mock. **Reestruturação 3 fluxos + 1º caso real consolidado**: 3 fluxos modulares (3D / 2D / Pose Transfer), Biblioteca C, blocos modulares (Acessórios / Estilo / Estética / Proporção / Realismo / Material / Técnico), upload clicável, lightbox. Primeiro caso real do 3D (`accessoriesMode = keep` + `styleSource = image1`) registrado e ativo. Demais casos aguardando prompts.
 
-## Última mudança — Segundo caso real do 3D Flow (07/05/2026 — terceira revisão)
+## Última mudança — Terceiro caso real do 3D Flow (07/05/2026 — quarta revisão)
 
-- **Caso novo consolidado**: `accessoriesMode = "remove"` + `styleSource = "image1"`.
-  - Constante `PROMPT_3D_CASE_REMOVE_IMAGE1` em `js/prompts.js` com o prompt aprovado completo. Image 1 = estrutura + estilo. Image 2 = identidade pura, sem acessórios externos. Acessórios removíveis (espada/escudo/bolsa/etc.) são suprimidos do resultado; armadura/roupa principal/cabelo/rosto são preservados.
-- Builder `build3DCharacterPrompt` refatorado pra usar um **lookup table** (chave `${accessoriesMode}__${styleSource}`) — facilita registrar próximos casos.
-- Casos consolidados ativos: `keep__image1` e `remove__image1`. Demais combinações caem em placeholder + warning no console.
-- `docs/PROMPTS_TODO.md` atualizado: linha 2 na tabela de "Casos consolidados".
+- **Caso novo consolidado**: `accessoriesMode = "remove"` + `styleSource = "image2"`.
+  - Constante `PROMPT_3D_CASE_REMOVE_IMAGE2` em `js/prompts.js`. Image 1 = só estrutura. Image 2 = identidade + estilo (sem acessórios externos). Acessórios removíveis suprimidos; identidade/cabelo/rosto/armadura/roupa principal preservados.
+  - Entrada `'remove__image2'` adicionada ao lookup do `build3DCharacterPrompt`.
+- Casos consolidados ativos: `keep__image1`, `remove__image1`, `remove__image2`. Demais combinações caem em placeholder + warning no console.
+- `docs/PROMPTS_TODO.md` atualizado: linha 3 na tabela de "Casos consolidados".
+
+### Casos anteriores (referência)
+
+- `keep__image1` — `PROMPT_3D_CASE_KEEP_IMAGE1`. Image 1 = estrutura + estilo. Image 2 = identidade + acessórios preservados.
+- `remove__image1` — `PROMPT_3D_CASE_REMOVE_IMAGE1`. Image 1 = estrutura + estilo. Image 2 = identidade pura.
+- Pipeline: `js/api.js → gerarImagensFluxo1` chama o builder; `js/ui.js → executarGeracao` passa `appState.threeDFlowOptions`.
+- UI da "Personalização manual" aparece só com `styleSource = "manual"`.
 
 ### Casos anteriores (referência)
 

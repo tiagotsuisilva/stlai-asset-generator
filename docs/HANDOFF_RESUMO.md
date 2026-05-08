@@ -1,18 +1,18 @@
 # Handoff — Resumo (lê este primeiro)
 
-> Atualizado em: 08/05/2026 (décima revisão — todos os 4 casos com estilo da imagem prontos)
+> Atualizado em: 08/05/2026 (décima primeira revisão — primeiro preset manual preenchido)
 > Para detalhes completos: [`HANDOFF.md`](./HANDOFF.md)
 
 ## Estado atual
 
-MVP completo, deployado, rodando em mock. **Estratégia de prompts do 3D Character Flow é "prompt completo por caso"**: a montagem modular antiga foi desativada e marcada como DEPRECATED em `js/prompts.js`. A UI seleciona um único `promptId` que aponta para um prompt completo no mapa `PROMPTS_3D_CHARACTER_FLOW`. **4/12 prompts já estão definitivos — todos os casos com estilo da imagem (image1/image2 × keep/remove) estão prontos**. Faltam os 8 presets manuais (`styleSource = manual`).
+MVP completo, deployado, rodando em mock. **Estratégia de prompts do 3D Character Flow é "prompt completo por caso"**: a montagem modular antiga foi desativada e marcada como DEPRECATED em `js/prompts.js`. A UI seleciona um único `promptId` que aponta para um prompt completo no mapa `PROMPTS_3D_CHARACTER_FLOW`. **5/12 prompts já estão definitivos** — todos os 4 casos com estilo da imagem + 1 preset manual (`THREED_MANUAL_CUTE_TOY_PREMIUM_MATTE_PRINT_KEEP_ACCESSORIES`). Faltam 7 presets manuais.
 
-## Última mudança — Quarto prompt definitivo / fim dos casos por imagem (08/05/2026 — décima revisão)
+## Última mudança — Primeiro preset manual definitivo (08/05/2026 — décima primeira revisão)
 
-- `THREED_REMOVE_ACCESSORIES_STYLE_IMAGE2` preenchido em `js/prompts.js` (template literal dentro do mapa) e em `docs/PROMPTS_3D_CHARACTER_FLOW.md` (seção do prompt + status na tabela como ✅ definitivo).
-- Caso correspondente: `accessoriesMode = remove` + `styleSource = image2`. Image 1 dita só estrutura; Image 2 dita identidade **e** estilo (sem props/acessórios removíveis).
-- Marco: **os 4 casos do 3D Flow que não dependem do modo manual estão completos**. Qualquer combinação `styleSource ∈ {image1, image2}` com `accessoriesMode ∈ {keep, remove}` agora resolve pra um prompt definitivo.
-- Próximo bloco: 8 presets manuais (`styleSource = manual`).
+- `THREED_MANUAL_CUTE_TOY_PREMIUM_MATTE_PRINT_KEEP_ACCESSORIES` preenchido em `js/prompts.js` (template literal dentro do mapa) e em `docs/PROMPTS_3D_CHARACTER_FLOW.md` (seção do prompt + status na tabela como ✅ definitivo, descrição expandida com state completo da UI).
+- Caso correspondente: `accessoriesMode = keep` + `styleSource = manual` + estética cute/toy/premium_collectible + matte vinyl + print friendly + proporção default + realismo stylized.
+- O resolver `resolve3DCharacterPromptId` já estava preparado pra esse preset — agora o caminho retorna prompt definitivo em vez de placeholder.
+- Próximos: 7 presets manuais restantes (`THREED_MANUAL_*`).
 - Sem mudança em arquitetura, na UI ou em outros prompts.
 
 A área "Personalização Manual" do 3D Flow estava aparecendo mesmo quando deveria ficar escondida (CSS `.manual-block { display: flex }` sobrescrevia o atributo `[hidden]`). Agora há regra `.manual-block[hidden] { display: none }` — área aparece **apenas** quando `styleSource = manual`, e o botão "Abrir Biblioteca A" sobe naturalmente quando ela está oculta. Mesma correção aplicada implicitamente ao Pose Flow (mesmo seletor).
@@ -160,7 +160,7 @@ Os 8 presets manuais e regras de match estão documentados em [`PROMPTS_3D_CHARA
 ## Pendências críticas (bloqueantes pro Demo Day)
 
 1. Renomear 7 .jpg da Biblioteca A pros IDs corretos (lista no `HANDOFF.md`).
-2. **Preencher os 8 presets manuais do 3D Character Flow** (`THREED_MANUAL_*`) em `PROMPTS_3D_CHARACTER_FLOW.md` e `js/prompts.js`. 4/12 já preenchidos — todos os casos por imagem (image1/image2 × keep/remove) estão prontos.
+2. **Preencher os 7 presets manuais restantes do 3D Character Flow** (`THREED_MANUAL_*`) em `PROMPTS_3D_CHARACTER_FLOW.md` e `js/prompts.js`. 5/12 já preenchidos (4 casos por imagem + 1 preset manual cute toy premium matte print keep).
 3. Validar nome do modelo OpenAI (`gpt-image-2` vs `gpt-image-1`).
 4. Substituir stub `callTripoAPI()` pela integração real da STLFLIX.
 

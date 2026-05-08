@@ -1,11 +1,19 @@
 # Handoff — Resumo (lê este primeiro)
 
-> Atualizado em: 08/05/2026 (décima oitava revisão — **TODOS os 12 prompts do 3D Flow definitivos** 🎉)
+> Atualizado em: 08/05/2026 (décima nona revisão — **Biblioteca C populada** com 17 poses reais)
 > Para detalhes completos: [`HANDOFF.md`](./HANDOFF.md)
 
 ## Estado atual
 
-MVP completo, deployado, rodando em mock. **Estratégia de prompts do 3D Character Flow é "prompt completo por caso"**: a montagem modular antiga foi desativada e marcada como DEPRECATED em `js/prompts.js`. A UI seleciona um único `promptId` que aponta para um prompt completo no mapa `PROMPTS_3D_CHARACTER_FLOW`. **12/12 prompts definitivos** — todo o 3D Character Flow está com prompts completos: 4 casos por imagem (image1/image2 × keep/remove) + 4 pares manuais (cute toy premium, chibi cute toy, semi-realistic statue resin, realistic painted resin × keep/remove).
+MVP completo, deployado, rodando em mock. **Biblioteca C (poses) populada com 17 imagens reais** (`pose1.png`..`pose17.png`) — Pose Transfer Flow agora pode ser navegado de ponta a ponta. **Estratégia de prompts do 3D Character Flow é "prompt completo por caso"**: a montagem modular antiga foi desativada e marcada como DEPRECATED em `js/prompts.js`. A UI seleciona um único `promptId` que aponta para um prompt completo no mapa `PROMPTS_3D_CHARACTER_FLOW`. **12/12 prompts definitivos** — todo o 3D Character Flow está com prompts completos: 4 casos por imagem (image1/image2 × keep/remove) + 4 pares manuais (cute toy premium, chibi cute toy, semi-realistic statue resin, realistic painted resin × keep/remove).
+
+## Última mudança — Biblioteca C populada (08/05/2026 — décima nona revisão)
+
+- **17 poses reais** copiadas de `C:\Users\tiago\Downloads\POSES_STLAI_ASSET\` pra `bibliotecaC/` (mantidos como `pose1.png`..`pose17.png`).
+- `bibliotecaC/bibliotecaC.json` reescrito: 17 entradas com `id`, `title`, `description`, `image`, `tags`, `poseType` (standing/action), `visibilityType` (full_body em todas).
+- Catalogação manual: 5 standing (em pé com gestos casuais/heroicos) + 12 action (combate, lunge, soco, chute, fisiculturismo, espada+escudo, espadão, arco e flecha, conjurando energia).
+- `js/ui.js → renderBiblioteca`: novo mapa `POSE_TYPE_LABELS` (`standing→"Em pé"`, `action→"Ação"`, etc.) e fallback de meta agora prefere `poseType` traduzido sobre `visibilityType` (que era uniforme "full_body" e aparecia feio no card).
+- Sem mudança em arquitetura, no estado, no fluxo de geração ou em outras telas — `executarGeracao` e `gerarImagensFluxoPose` já estavam compatíveis com a Biblioteca C.
 
 ## Última mudança — 3D Character Flow 100% preenchido (08/05/2026 — décima oitava revisão)
 
@@ -176,7 +184,7 @@ Os 8 presets manuais e regras de match estão documentados em [`PROMPTS_3D_CHARA
 ## Pendências secundárias
 
 5. Popular Biblioteca B (11 imagens).
-6. Popular Biblioteca C com imagens reais de poses (hoje só JSON placeholder).
+6. ~~Popular Biblioteca C com imagens reais de poses~~ ✅ **17/17 concluído** (08/05/2026).
 7. Smoke test final na URL pública (3 fluxos, blocos modulares, lightbox).
 8. Eventual refinamento das telas internas (biblioteca/preview/tripo) seguindo o novo visual.
 

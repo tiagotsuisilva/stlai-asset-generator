@@ -234,14 +234,21 @@ function iniciarFluxo(fluxo) {
   showScreen('biblioteca');
 }
 
+const POSE_TYPE_LABELS = {
+  standing: 'Em pé',
+  action: 'Ação',
+  static: 'Estático',
+  seated: 'Sentado',
+};
+
 function renderBiblioteca(itens) {
   const grid = document.getElementById('biblioteca-grid');
   grid.innerHTML = '';
   itens.forEach((item) => {
-    // Compatibilidade: Bib A/B usam {nome, arquivo, categoria}; Bib C usa {title, image, visibilityType}
+    // Compatibilidade: Bib A/B usam {nome, arquivo, categoria}; Bib C usa {title, image, poseType}
     const nome = item.nome || item.title || item.id;
     const arquivo = item.arquivo || item.image || '';
-    const meta = item.categoria || item.visibilityType || '';
+    const meta = item.categoria || POSE_TYPE_LABELS[item.poseType] || item.poseType || item.visibilityType || '';
 
     const card = document.createElement('div');
     card.className = 'grid-card';

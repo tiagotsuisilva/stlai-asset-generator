@@ -1,65 +1,155 @@
 [
   {
-    "id": "pose_busto_frontal",
-    "title": "Busto frontal",
-    "description": "Personagem visto do peito pra cima, encarando a câmera.",
-    "image": "bibliotecaC/pose_busto_frontal.jpg",
-    "tags": ["frontal", "estatico", "fechado"],
-    "poseType": "static",
-    "visibilityType": "bust"
-  },
-  {
-    "id": "pose_busto_3_4",
-    "title": "Busto 3/4",
-    "description": "Busto em ângulo de três quartos, leve giro do tronco.",
-    "image": "bibliotecaC/pose_busto_3_4.jpg",
-    "tags": ["3-4", "estatico"],
-    "poseType": "static",
-    "visibilityType": "bust"
-  },
-  {
-    "id": "pose_meio_corpo_bracos_cruzados",
-    "title": "Meio-corpo, braços cruzados",
-    "description": "Meio-corpo, postura confiante, braços cruzados na frente.",
-    "image": "bibliotecaC/pose_meio_corpo_bracos_cruzados.jpg",
-    "tags": ["meio-corpo", "confiante", "bracos-cruzados"],
-    "poseType": "static",
-    "visibilityType": "half_body"
-  },
-  {
-    "id": "pose_corpo_inteiro_em_pe",
-    "title": "Corpo inteiro em pé",
-    "description": "Personagem em pé, postura neutra, corpo inteiro visível.",
-    "image": "bibliotecaC/pose_corpo_inteiro_em_pe.jpg",
-    "tags": ["corpo-inteiro", "em-pe", "neutro"],
+    "id": "pose1",
+    "title": "Em pé neutro",
+    "description": "Personagem em pé com postura neutra e relaxada, corpo inteiro visível.",
+    "image": "bibliotecaC/pose1.png",
+    "tags": ["em-pe", "neutro", "corpo-inteiro"],
     "poseType": "standing",
     "visibilityType": "full_body"
   },
   {
-    "id": "pose_corpo_inteiro_acao",
-    "title": "Corpo inteiro em ação",
-    "description": "Personagem em pose de ação dinâmica, peso transferido.",
-    "image": "bibliotecaC/pose_corpo_inteiro_acao.jpg",
-    "tags": ["corpo-inteiro", "acao", "dinamico"],
+    "id": "pose2",
+    "title": "Chute lateral alto",
+    "description": "Pose dinâmica de chute lateral, perna estendida e guarda alta.",
+    "image": "bibliotecaC/pose2.png",
+    "tags": ["acao", "chute", "dinamico"],
     "poseType": "action",
     "visibilityType": "full_body"
   },
   {
-    "id": "pose_sentado_base",
-    "title": "Sentado em base",
-    "description": "Personagem sentado em uma base/superfície, mãos apoiadas.",
-    "image": "bibliotecaC/pose_sentado_base.jpg",
-    "tags": ["sentado", "base", "apoiado"],
-    "poseType": "seated",
-    "visibilityType": "seated"
+    "id": "pose3",
+    "title": "Equilíbrio em uma perna",
+    "description": "Equilíbrio em uma perna com braços abertos, gesto de movimento.",
+    "image": "bibliotecaC/pose3.png",
+    "tags": ["acao", "equilibrio", "dinamico"],
+    "poseType": "action",
+    "visibilityType": "full_body"
   },
   {
-    "id": "pose_recortado_topo",
-    "title": "Recortado no topo",
-    "description": "Crop no topo da cabeça, foco no rosto e ombros.",
-    "image": "bibliotecaC/pose_recortado_topo.jpg",
-    "tags": ["crop", "rosto"],
-    "poseType": "static",
-    "visibilityType": "cropped"
+    "id": "pose4",
+    "title": "Lunge ofensivo",
+    "description": "Lunge agachado com punho erguido para trás, postura ofensiva.",
+    "image": "bibliotecaC/pose4.png",
+    "tags": ["acao", "lunge", "ataque"],
+    "poseType": "action",
+    "visibilityType": "full_body"
+  },
+  {
+    "id": "pose5",
+    "title": "Guarda de combate",
+    "description": "Postura de combate com pernas afastadas e punhos cerrados em guarda.",
+    "image": "bibliotecaC/pose5.png",
+    "tags": ["combate", "guarda", "dinamico"],
+    "poseType": "action",
+    "visibilityType": "full_body"
+  },
+  {
+    "id": "pose6",
+    "title": "Cavalo agachado",
+    "description": "Agachado em postura de cavalo (estilo sumô), punhos cerrados, força contida.",
+    "image": "bibliotecaC/pose6.png",
+    "tags": ["agachado", "forca", "combate"],
+    "poseType": "action",
+    "visibilityType": "full_body"
+  },
+  {
+    "id": "pose7",
+    "title": "Soco frontal",
+    "description": "Soco frontal com perna levantada, ataque direto e dinâmico.",
+    "image": "bibliotecaC/pose7.png",
+    "tags": ["soco", "ataque", "dinamico"],
+    "poseType": "action",
+    "visibilityType": "full_body"
+  },
+  {
+    "id": "pose8",
+    "title": "Apontando casual",
+    "description": "Em pé apontando com a mão estendida, postura casual.",
+    "image": "bibliotecaC/pose8.png",
+    "tags": ["em-pe", "gesto", "casual"],
+    "poseType": "standing",
+    "visibilityType": "full_body"
+  },
+  {
+    "id": "pose9",
+    "title": "Braços abertos",
+    "description": "Em pé com braços abertos, gesto interrogativo ou de apresentação.",
+    "image": "bibliotecaC/pose9.png",
+    "tags": ["em-pe", "gesto", "expressivo"],
+    "poseType": "standing",
+    "visibilityType": "full_body"
+  },
+  {
+    "id": "pose10",
+    "title": "Mãos na cintura",
+    "description": "Em pé com mãos na cintura, pose heroica e confiante.",
+    "image": "bibliotecaC/pose10.png",
+    "tags": ["em-pe", "heroica", "confiante"],
+    "poseType": "standing",
+    "visibilityType": "full_body"
+  },
+  {
+    "id": "pose11",
+    "title": "Conjurando energia",
+    "description": "Agachado com mãos tensionadas à frente, como canalizando força ou magia.",
+    "image": "bibliotecaC/pose11.png",
+    "tags": ["acao", "magia", "intenso"],
+    "poseType": "action",
+    "visibilityType": "full_body"
+  },
+  {
+    "id": "pose12",
+    "title": "Flex lateral",
+    "description": "Pose de fisiculturista em flexão lateral, exibindo bíceps.",
+    "image": "bibliotecaC/pose12.png",
+    "tags": ["fisiculturista", "flex", "exibicao"],
+    "poseType": "action",
+    "visibilityType": "full_body"
+  },
+  {
+    "id": "pose13",
+    "title": "Bíceps duplo agachado",
+    "description": "Agachado em pose de bíceps duplo, exibindo força.",
+    "image": "bibliotecaC/pose13.png",
+    "tags": ["fisiculturista", "biceps", "agachado"],
+    "poseType": "action",
+    "visibilityType": "full_body"
+  },
+  {
+    "id": "pose14",
+    "title": "Espada e escudo",
+    "description": "Em pé com espada e escudo, guarda de guerreiro.",
+    "image": "bibliotecaC/pose14.png",
+    "tags": ["guerreiro", "espada", "escudo", "adereços"],
+    "poseType": "standing",
+    "visibilityType": "full_body"
+  },
+  {
+    "id": "pose15",
+    "title": "Espadão no ombro",
+    "description": "Em pé com espadão apoiado no ombro, postura confiante.",
+    "image": "bibliotecaC/pose15.png",
+    "tags": ["guerreiro", "espada", "adereços"],
+    "poseType": "standing",
+    "visibilityType": "full_body"
+  },
+  {
+    "id": "pose16",
+    "title": "Bíceps duplo em pé",
+    "description": "Pose de fisiculturista em pé, bíceps duplo frontal.",
+    "image": "bibliotecaC/pose16.png",
+    "tags": ["fisiculturista", "biceps", "em-pe"],
+    "poseType": "action",
+    "visibilityType": "full_body"
+  },
+  {
+    "id": "pose17",
+    "title": "Arco e flecha",
+    "description": "Em pé puxando arco e flecha, mira firme.",
+    "image": "bibliotecaC/pose17.png",
+    "tags": ["arqueiro", "arco", "mira", "adereços"],
+    "poseType": "action",
+    "visibilityType": "full_body"
   }
 ]

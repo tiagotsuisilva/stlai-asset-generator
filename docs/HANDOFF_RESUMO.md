@@ -1,18 +1,17 @@
 # Handoff — Resumo (lê este primeiro)
 
-> Atualizado em: 08/05/2026 (décima sexta revisão — par semi-realistic statue resin fechado)
+> Atualizado em: 08/05/2026 (décima sétima revisão — realistic painted resin keep preenchido)
 > Para detalhes completos: [`HANDOFF.md`](./HANDOFF.md)
 
 ## Estado atual
 
-MVP completo, deployado, rodando em mock. **Estratégia de prompts do 3D Character Flow é "prompt completo por caso"**: a montagem modular antiga foi desativada e marcada como DEPRECATED em `js/prompts.js`. A UI seleciona um único `promptId` que aponta para um prompt completo no mapa `PROMPTS_3D_CHARACTER_FLOW`. **10/12 prompts já estão definitivos** — todos os 4 casos com estilo da imagem + par cute toy premium + par chibi cute toy + par semi-realistic statue resin (keep + remove). Faltam 2 presets manuais (realistic painted resin keep/remove).
+MVP completo, deployado, rodando em mock. **Estratégia de prompts do 3D Character Flow é "prompt completo por caso"**: a montagem modular antiga foi desativada e marcada como DEPRECATED em `js/prompts.js`. A UI seleciona um único `promptId` que aponta para um prompt completo no mapa `PROMPTS_3D_CHARACTER_FLOW`. **11/12 prompts já estão definitivos** — todos os 4 casos com estilo da imagem + par cute toy premium + par chibi cute toy + par semi-realistic statue resin + realistic painted resin (keep). Falta apenas 1 preset manual (realistic painted resin remove).
 
-## Última mudança — Par semi-realistic statue resin fechado (08/05/2026 — décima sexta revisão)
+## Última mudança — Realistic painted resin keep preenchido (08/05/2026 — décima sétima revisão)
 
-- `THREED_MANUAL_SEMIREALISTIC_STATUE_RESIN_REMOVE_ACCESSORIES` preenchido em `js/prompts.js` (template literal dentro do mapa) e em `docs/PROMPTS_3D_CHARACTER_FLOW.md` (seção do prompt + status na tabela como ✅ definitivo, descrição expandida com state completo da UI).
-- Caso correspondente: `accessoriesMode = remove` + `styleSource = manual` + stylized_statue + proporção default + realismo semi_realistic + smooth resin.
-- Marco: **3/4 pares manuais fechados** (cute toy premium, chibi cute toy, semi-realistic statue resin). Falta apenas o par realistic painted resin pra fechar todos os 12 prompts do 3D Flow.
-- Próximos: 2 presets manuais restantes — realistic painted resin keep + remove.
+- `THREED_MANUAL_REALISTIC_PAINTED_RESIN_KEEP_ACCESSORIES` preenchido em `js/prompts.js` (template literal dentro do mapa) e em `docs/PROMPTS_3D_CHARACTER_FLOW.md` (seção do prompt + status na tabela como ✅ definitivo, descrição expandida com state completo da UI).
+- Caso correspondente: `accessoriesMode = keep` + `styleSource = manual` + proporção default + realismo realistic + painted_collectible_resin.
+- Próximo: 1 preset manual restante — `THREED_MANUAL_REALISTIC_PAINTED_RESIN_REMOVE_ACCESSORIES` (12/12, fecha tudo).
 - Sem mudança em arquitetura, na UI ou em outros prompts.
 
 A área "Personalização Manual" do 3D Flow estava aparecendo mesmo quando deveria ficar escondida (CSS `.manual-block { display: flex }` sobrescrevia o atributo `[hidden]`). Agora há regra `.manual-block[hidden] { display: none }` — área aparece **apenas** quando `styleSource = manual`, e o botão "Abrir Biblioteca A" sobe naturalmente quando ela está oculta. Mesma correção aplicada implicitamente ao Pose Flow (mesmo seletor).
@@ -160,7 +159,7 @@ Os 8 presets manuais e regras de match estão documentados em [`PROMPTS_3D_CHARA
 ## Pendências críticas (bloqueantes pro Demo Day)
 
 1. Renomear 7 .jpg da Biblioteca A pros IDs corretos (lista no `HANDOFF.md`).
-2. **Preencher os 2 presets manuais restantes do 3D Character Flow** (`THREED_MANUAL_REALISTIC_PAINTED_RESIN_*`) em `PROMPTS_3D_CHARACTER_FLOW.md` e `js/prompts.js`. 10/12 já preenchidos (4 casos por imagem + par cute toy premium + par chibi cute toy + par semi-realistic statue resin).
+2. **Preencher o último preset manual do 3D Character Flow** (`THREED_MANUAL_REALISTIC_PAINTED_RESIN_REMOVE_ACCESSORIES`) em `PROMPTS_3D_CHARACTER_FLOW.md` e `js/prompts.js`. 11/12 já preenchidos.
 3. Validar nome do modelo OpenAI (`gpt-image-2` vs `gpt-image-1`).
 4. Substituir stub `callTripoAPI()` pela integração real da STLFLIX.
 

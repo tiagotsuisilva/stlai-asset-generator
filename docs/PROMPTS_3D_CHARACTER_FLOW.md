@@ -1,7 +1,7 @@
 # Prompts do 3D Character Flow
 
 > Atualizado em: 08/05/2026
-> Status: 6/12 prompts definitivos preenchidos — todos os 4 casos com estilo da imagem + preset manual cute toy premium (keep + remove). Faltam 6 presets manuais.
+> Status: 7/12 prompts definitivos preenchidos — todos os 4 casos com estilo da imagem + par cute toy premium + chibi cute toy (keep). Faltam 5 presets manuais.
 
 ## Estratégia
 
@@ -29,7 +29,7 @@ A UI continua igual (acessórios, direção de estilo, estética, proporção, r
 | `THREED_REMOVE_ACCESSORIES_STYLE_IMAGE2` | Estilo da Imagem 2 sem acessórios | `accessoriesMode=remove`, `styleSource=image2` | ✅ definitivo |
 | `THREED_MANUAL_CUTE_TOY_PREMIUM_MATTE_PRINT_KEEP_ACCESSORIES` | Preset cute + toy + premium collectible em matte vinyl, print friendly, acessórios preservados | `styleSource=manual`, `aestheticModifiers⊇{cute, toy, premium_collectible}`, `materialFinish=matte_vinyl`, `technicalModifiers⊇{print_friendly}`, `accessoriesMode=keep` | ✅ definitivo |
 | `THREED_MANUAL_CUTE_TOY_PREMIUM_MATTE_PRINT_REMOVE_ACCESSORIES` | Mesmo preset, sem acessórios | idem com `accessoriesMode=remove` | ✅ definitivo |
-| `THREED_MANUAL_CHIBI_CUTE_TOY_MATTE_KEEP_ACCESSORIES` | Preset chibi + cute + toy em matte vinyl, acessórios preservados | `styleSource=manual`, `proportionPreset=chibi`, `aestheticModifiers⊇{cute, toy}`, `materialFinish=matte_vinyl`, `accessoriesMode=keep` | ⏳ placeholder |
+| `THREED_MANUAL_CHIBI_CUTE_TOY_MATTE_KEEP_ACCESSORIES` | Preset chibi + cute + toy em matte vinyl, acessórios preservados | `styleSource=manual`, `proportionPreset=chibi`, `aestheticModifiers⊇{cute, toy}`, `materialFinish=matte_vinyl`, `accessoriesMode=keep` | ✅ definitivo |
 | `THREED_MANUAL_CHIBI_CUTE_TOY_MATTE_REMOVE_ACCESSORIES` | Mesmo preset, sem acessórios | idem com `accessoriesMode=remove` | ⏳ placeholder |
 | `THREED_MANUAL_SEMIREALISTIC_STATUE_RESIN_KEEP_ACCESSORIES` | Preset semi-realista, statue, resina (smooth ou painted), acessórios preservados | `styleSource=manual`, `realismLevel=semi_realistic`, `aestheticModifiers⊇{stylized_statue}`, `materialFinish ∈ {smooth_resin, painted_collectible_resin}`, `accessoriesMode=keep` | ⏳ placeholder |
 | `THREED_MANUAL_SEMIREALISTIC_STATUE_RESIN_REMOVE_ACCESSORIES` | Mesmo preset, sem acessórios | idem com `accessoriesMode=remove` | ⏳ placeholder |
@@ -1528,17 +1528,293 @@ GLOBAL DO NOTS
 
 Estado da UI:
 
-- `styleSource = manual`
-- `proportionPreset = chibi`
-- `aestheticModifiers ⊇ { cute, toy }`
-- `materialFinish = matte_vinyl`
 - `accessoriesMode = keep`
+- `styleSource = manual`
+- `aestheticModifiers = cute, toy`
+- `proportionPreset = chibi`
+- `realismLevel = stylized`
+- `materialFinish = matte_vinyl`
 
 Descrição:
-Preset chibi + cute + toy em matte vinyl, acessórios preservados.
+Preserva eventuais props/acessórios da Imagem 2, usa estrutura/pose/crop da Imagem 1, usa identidade/personagem da Imagem 2 e aplica um estilo manual chibi cute toy com acabamento matte vinyl.
 
 Prompt:
-[AGUARDANDO PROMPT DEFINITIVO]
+
+```
+MULTI-IMAGE INSTRUCTION — 3D CHARACTER FLOW
+CASE: KEEP ACCESSORIES + MANUAL STYLE — CHIBI CUTE TOY MATTE VINYL
+
+You will use TWO input images with different functions.
+
+FINAL OUTPUT REQUIREMENT
+Generate a SINGLE final image only.
+Do not output text, labels, panels, sheets, turnarounds, or multiple views.
+
+CORE LOGIC
+
+IMAGE 1 = STRUCTURE SOURCE
+IMAGE 2 = CHARACTER + ACCESSORIES SOURCE
+MANUAL STYLE = FINAL VISUAL STYLE SOURCE
+
+The final image must show the character from Image 2 transformed into the pose, crop, framing, camera, and composition of Image 1, while applying the manual chibi cute toy style defined in this prompt.
+
+Do not use Image 1 or Image 2 as the primary visual style source.
+Use Image 1 for structure, pose, body visibility, crop, camera, and composition.
+Use Image 2 for character identity, face, clothing, colors, species, recognizable design, and accessories.
+
+IMAGE 1 ROLE — STRUCTURE SOURCE
+
+Use Image 1 as the source for:
+- pose
+- posture
+- body visibility
+- body crop
+- framing
+- camera angle
+- camera distance
+- composition
+- silhouette
+- limb placement
+- hand placement
+- foot placement, if visible
+- support/contact logic
+- presence or absence of base or support surface
+
+Image 1 defines the final pose, crop, camera, body visibility, and composition.
+
+Because this is a chibi preset, proportions may be stylized into a chibi format, but the final result must still respect:
+- the pose direction from Image 1
+- the body visibility from Image 1
+- the crop from Image 1
+- the camera angle from Image 1
+- the composition from Image 1
+- the presence or absence of base/support from Image 1
+
+Do not use Image 1 as:
+- character identity source
+- face source
+- hair source
+- clothing identity source
+- color source
+- species source
+- primary visual style source
+
+IMAGE 2 ROLE — CHARACTER SOURCE
+
+Use Image 2 as the source for:
+- character identity
+- face and facial features
+- facial expression
+- hairstyle or hair absence
+- facial hair or lack of facial hair
+- outfit / costume / armor / clothing
+- colors
+- species identity, if non-human
+- recognizable body traits
+- recognizable character design
+- props/accessories, according to the accessories rule below
+
+Do not use Image 2 for:
+- pose
+- posture
+- body stance
+- camera angle
+- framing
+- crop
+- composition
+- final body visibility
+- primary visual style
+
+STRUCTURE RULES
+
+Follow Image 1 for all structural decisions, except where the chibi preset intentionally changes proportions.
+- Match the pose logic of Image 1.
+- Match the visible body crop of Image 1.
+- Match the camera angle and composition of Image 1.
+- Match the final body visibility from Image 1.
+- If Image 1 shows only bust, generate only a chibi bust.
+- If Image 1 shows half body, generate only chibi half body.
+- If Image 1 shows full body, generate chibi full body.
+- If Image 1 crops the body, respect the same crop.
+- If Image 1 has a base or support surface, preserve its structural logic.
+- If Image 1 does not have a base, do not create a base automatically.
+- Do not force full body if Image 1 is cropped.
+- Do not force feet, legs, hands, base, or support elements unless supported by Image 1.
+- Do not force seated, standing, action, or display-base logic unless supported by Image 1.
+
+CHIBI PROPORTION RULE
+
+Transform the character into a chibi-style collectible.
+Use:
+- noticeably larger head
+- smaller simplified body
+- short compact limbs
+- cute stylized proportion system
+- simplified anatomy
+- soft rounded silhouette
+- charming toy-like proportions
+
+Important:
+Chibi changes the proportions, but it must not ignore the pose, crop, body visibility, camera, or composition from Image 1.
+
+Do not use realistic anatomy.
+Do not mix chibi proportions with realistic anatomy.
+Do not make the result semi-realistic or realistic.
+Do not create a standard adult-proportioned figure.
+Do not generate extra body parts outside the visible body logic of Image 1.
+
+CHARACTER IDENTITY RULES
+
+Preserve the character identity from Image 2 in chibi form.
+- Preserve the face identity from Image 2, simplified into a cute chibi treatment.
+- Preserve hairstyle, facial hair or absence of facial hair from Image 2.
+- Preserve expression from Image 2 when compatible with the chibi style.
+- Preserve outfit, armor, clothing, colors, and recognizable design traits from Image 2.
+- Preserve species identity if Image 2 is non-human.
+- The final result must clearly read as the character from Image 2.
+- Do not merge identities between Image 1 and Image 2.
+- Do not borrow face, hair, outfit, colors, or species identity from Image 1.
+
+ACCESSORIES RULE — KEEP ACCESSORIES FROM IMAGE 2
+
+Preserve visible props and removable accessories from Image 2 when compatible with the chibi pose, crop, and composition from Image 1.
+
+Props/accessories may include:
+- weapons
+- shields
+- tools
+- staffs
+- bags
+- backpacks
+- handheld objects
+- external carried items
+- objects attached externally to the character
+
+Adapt these props into simplified, chibi-friendly forms.
+Rules for accessories:
+- make props thicker, cleaner, and less fragile when needed
+- simplify tiny details
+- keep them readable
+- integrate them naturally with the chibi body
+- do not let props break the pose logic from Image 1
+- do not preserve props if they conflict with the crop or body visibility of Image 1
+
+Do not treat the following as removable accessories:
+- main clothing
+- armor
+- boots
+- gloves
+- hair
+- beard
+- body parts
+- wings, horns, tail, or anatomy
+- skin, fur, feathers, scales, or natural markings
+- identity-defining outfit elements
+
+If a cape, necklace, belt, sash, or ornament is central to the identity of Image 2, preserve it as part of the character design, not as a removable prop.
+
+MANUAL STYLE RULE — CHIBI CUTE TOY
+
+Apply a chibi cute toy aesthetic.
+The final result should feel like a cute chibi collectible toy.
+Use:
+- charming oversized head
+- simplified cute facial treatment
+- soft rounded forms
+- compact toy-like body
+- clean sculpted masses
+- cute expressive silhouette
+- playful but polished toy design
+- approachable and friendly personality
+- simplified readable costume details
+
+Do not use the visual style of Image 1 as the main style.
+Do not use the visual style of Image 2 as the main style.
+The style must come from this manual chibi cute toy rule.
+
+MATERIAL RULE — MATTE VINYL
+
+Use a matte vinyl toy finish.
+Surfaces should be:
+- smooth
+- clean
+- softly reflective
+- premium soft-matte
+- simplified and polished
+- suitable for a collectible vinyl-style toy
+
+Avoid:
+- realistic skin pores
+- gritty surface noise
+- cheap glossy plastic
+- messy texture
+- overly complex material breakup
+
+TECHNICAL RULE — CHIBI TOY READABILITY
+
+Keep the design readable and object-like.
+Use:
+- solid shapes
+- simplified sculpted details
+- robust forms
+- clean silhouette
+- thicker accessory shapes when accessories are present
+- simplified hair masses
+- no thin wispy strands
+- no fragile micro-details
+
+Do not change the pose, crop, or visible body logic from Image 1.
+Do not remove core character identity from Image 2.
+
+PARTIAL OR NON-HUMAN CHARACTER RULES
+
+If Image 2 is partial, cropped, bust-only, or head-only:
+- use its visible identity traits to infer missing character areas only as needed to fit the structure and body visibility of Image 1
+- inferred areas must remain consistent with the identity, species, colors, outfit logic, and visual traits of Image 2
+- adapt inferred areas into the chibi toy style
+
+If Image 2 is an animal and Image 1 is humanoid:
+- adapt the animal into a cute chibi anthropomorphic humanoid collectible
+- preserve the animal species identity from Image 2
+- preserve key animal traits such as head shape, muzzle or beak, ears, horns, eyes, nose, fur, feathers, scales, markings, and color patterns
+- use the body visibility, pose, posture, crop, and framing from Image 1
+- do not preserve the original quadruped pose from Image 2
+- do not humanize the face so much that the animal identity becomes unclear
+
+If Image 2 is a robot, monster, creature, mask, bust, or partial fantasy character:
+- infer missing body areas consistently with the visible identity from Image 2
+- do not create a generic human body if Image 2 suggests a specific species, creature type, robot design, monster design, or fantasy identity
+- adapt the inferred body to the structure from Image 1 and the manual chibi cute toy style
+
+USER ADDITIONAL INSTRUCTIONS
+
+Apply user additional instructions only if they do not conflict with:
+- the structure, crop, body visibility, and pose from Image 1
+- the character identity from Image 2
+- the accessories rule of this case
+- the manual chibi cute toy matte vinyl style
+
+If user instructions conflict with those priorities, preserve the priorities above.
+
+GLOBAL DO NOTS
+- do not generate multiple views
+- do not generate a turnaround sheet
+- do not output text
+- do not use Image 1 as character identity
+- do not use Image 2 as pose source
+- do not use Image 1 as primary style source
+- do not use Image 2 as primary style source
+- do not merge identities between the images
+- do not invent body visibility beyond Image 1
+- do not force full body if Image 1 is cropped
+- do not create a base unless Image 1 has one or the user explicitly asks for one
+- do not remove identity-defining clothing or traits from Image 2
+- do not confuse props with clothing, armor, anatomy, or identity-defining traits
+- do not create photorealistic skin detail
+- do not create realistic anatomy
+- do not create messy texture
+- do not create cheap glossy plastic
+```
 
 ---
 

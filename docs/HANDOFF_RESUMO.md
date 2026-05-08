@@ -1,18 +1,28 @@
 # Handoff — Resumo (lê este primeiro)
 
-> Atualizado em: 08/05/2026 (décima sétima revisão — realistic painted resin keep preenchido)
+> Atualizado em: 08/05/2026 (décima oitava revisão — **TODOS os 12 prompts do 3D Flow definitivos** 🎉)
 > Para detalhes completos: [`HANDOFF.md`](./HANDOFF.md)
 
 ## Estado atual
 
-MVP completo, deployado, rodando em mock. **Estratégia de prompts do 3D Character Flow é "prompt completo por caso"**: a montagem modular antiga foi desativada e marcada como DEPRECATED em `js/prompts.js`. A UI seleciona um único `promptId` que aponta para um prompt completo no mapa `PROMPTS_3D_CHARACTER_FLOW`. **11/12 prompts já estão definitivos** — todos os 4 casos com estilo da imagem + par cute toy premium + par chibi cute toy + par semi-realistic statue resin + realistic painted resin (keep). Falta apenas 1 preset manual (realistic painted resin remove).
+MVP completo, deployado, rodando em mock. **Estratégia de prompts do 3D Character Flow é "prompt completo por caso"**: a montagem modular antiga foi desativada e marcada como DEPRECATED em `js/prompts.js`. A UI seleciona um único `promptId` que aponta para um prompt completo no mapa `PROMPTS_3D_CHARACTER_FLOW`. **12/12 prompts definitivos** — todo o 3D Character Flow está com prompts completos: 4 casos por imagem (image1/image2 × keep/remove) + 4 pares manuais (cute toy premium, chibi cute toy, semi-realistic statue resin, realistic painted resin × keep/remove).
 
-## Última mudança — Realistic painted resin keep preenchido (08/05/2026 — décima sétima revisão)
+## Última mudança — 3D Character Flow 100% preenchido (08/05/2026 — décima oitava revisão)
 
-- `THREED_MANUAL_REALISTIC_PAINTED_RESIN_KEEP_ACCESSORIES` preenchido em `js/prompts.js` (template literal dentro do mapa) e em `docs/PROMPTS_3D_CHARACTER_FLOW.md` (seção do prompt + status na tabela como ✅ definitivo, descrição expandida com state completo da UI).
-- Caso correspondente: `accessoriesMode = keep` + `styleSource = manual` + proporção default + realismo realistic + painted_collectible_resin.
-- Próximo: 1 preset manual restante — `THREED_MANUAL_REALISTIC_PAINTED_RESIN_REMOVE_ACCESSORIES` (12/12, fecha tudo).
-- Sem mudança em arquitetura, na UI ou em outros prompts.
+- `THREED_MANUAL_REALISTIC_PAINTED_RESIN_REMOVE_ACCESSORIES` preenchido em `js/prompts.js` (template literal dentro do mapa) e em `docs/PROMPTS_3D_CHARACTER_FLOW.md` (seção do prompt + status na tabela como ✅ definitivo, descrição expandida com state completo da UI).
+- Caso correspondente: `accessoriesMode = remove` + `styleSource = manual` + proporção default + realismo realistic + painted_collectible_resin.
+- **Marco final**: o mapa `PROMPTS_3D_CHARACTER_FLOW` está com **0 placeholders** — todos os 12 IDs apontam pra um prompt completo. Qualquer combinação válida da UI no 3D Flow agora resolve pra um prompt definitivo, sem warnings de placeholder no console.
+- Sem mudança em arquitetura, na UI ou em outros fluxos.
+
+## Próximas etapas sugeridas
+
+Agora que o 3D Flow tem prompts completos, as próximas frentes são:
+
+- **Validação**: testar no real (com OpenAI) cada um dos 12 casos pra confirmar que os prompts entregam o resultado esperado. Pode começar pelos casos por imagem (mais usados) e ir pros presets manuais.
+- **Prompts do 2D Flow e Pose Transfer Flow**: ainda em placeholder. A mesma estratégia de "prompt completo por caso" pode (e deve) ser aplicada se o número de combinações for tratável.
+- **Renomear 7 .jpg da Biblioteca A** (pendência crítica antiga, lista no `HANDOFF.md`).
+- **Validar nome do modelo OpenAI** (`gpt-image-2` vs `gpt-image-1`).
+- **Substituir stub `callTripoAPI()`** pela integração real da STLFLIX.
 
 A área "Personalização Manual" do 3D Flow estava aparecendo mesmo quando deveria ficar escondida (CSS `.manual-block { display: flex }` sobrescrevia o atributo `[hidden]`). Agora há regra `.manual-block[hidden] { display: none }` — área aparece **apenas** quando `styleSource = manual`, e o botão "Abrir Biblioteca A" sobe naturalmente quando ela está oculta. Mesma correção aplicada implicitamente ao Pose Flow (mesmo seletor).
 
@@ -159,7 +169,7 @@ Os 8 presets manuais e regras de match estão documentados em [`PROMPTS_3D_CHARA
 ## Pendências críticas (bloqueantes pro Demo Day)
 
 1. Renomear 7 .jpg da Biblioteca A pros IDs corretos (lista no `HANDOFF.md`).
-2. **Preencher o último preset manual do 3D Character Flow** (`THREED_MANUAL_REALISTIC_PAINTED_RESIN_REMOVE_ACCESSORIES`) em `PROMPTS_3D_CHARACTER_FLOW.md` e `js/prompts.js`. 11/12 já preenchidos.
+2. ~~Preencher prompts do 3D Character Flow~~ ✅ **12/12 concluído** — todos os prompts definitivos preenchidos.
 3. Validar nome do modelo OpenAI (`gpt-image-2` vs `gpt-image-1`).
 4. Substituir stub `callTripoAPI()` pela integração real da STLFLIX.
 

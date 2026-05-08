@@ -1060,6 +1060,13 @@ select.input {
   border-radius: 16px;
   animation: manualIn 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
+/* Necessário porque "display: flex" acima sobrescreve o atributo HTML
+   [hidden] (que usa display: none global). Sem esta regra a área de
+   Personalização Manual continuaria aparecendo mesmo quando deveria
+   estar escondida (styleSource != "manual"). */
+.manual-block[hidden] {
+  display: none;
+}
 @keyframes manualIn {
   from { opacity: 0; transform: translateY(-6px); }
   to { opacity: 1; transform: translateY(0); }

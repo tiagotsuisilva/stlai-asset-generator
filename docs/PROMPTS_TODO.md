@@ -1,7 +1,12 @@
 # PROMPTS_TODO — placeholders e arquitetura modular
 
-> Status: 1 caso consolidado, demais aguardando prompts definitivos.
-> Última atualização: 07/05/2026 (segunda revisão).
+> ⚠️ **DEPRECATED para o 3D Character Flow** (08/05/2026).
+> A estratégia modular (montar prompt final concatenando bloquinhos) foi substituída por **prompt completo por caso**.
+> Para o 3D Character Flow, ver: [`PROMPTS_3D_CHARACTER_FLOW.md`](./PROMPTS_3D_CHARACTER_FLOW.md).
+> Este arquivo permanece como referência histórica das constantes modulares (ainda usadas por outros fluxos / mantidas como código DEPRECATED em `js/prompts.js`).
+>
+> Status anterior: 5 casos consolidados do 3D Flow (3 via imagem + 2 via modo manual). Módulos manuais (Estética / Proporção / Realismo / Material / Técnico) registrados.
+> Última atualização: 07/05/2026 (quinta revisão — modo manual completo).
 
 ## Casos consolidados (com prompt aprovado)
 
@@ -10,15 +15,17 @@
 | 1 | 3D Character Flow | `accessoriesMode = "keep"` + `styleSource = "image1"` | `PROMPT_3D_CASE_KEEP_IMAGE1` em `js/prompts.js` |
 | 2 | 3D Character Flow | `accessoriesMode = "remove"` + `styleSource = "image1"` | `PROMPT_3D_CASE_REMOVE_IMAGE1` em `js/prompts.js` |
 | 3 | 3D Character Flow | `accessoriesMode = "remove"` + `styleSource = "image2"` | `PROMPT_3D_CASE_REMOVE_IMAGE2` em `js/prompts.js` |
+| 4 | 3D Character Flow | `accessoriesMode = "keep"` + `styleSource = "manual"` | `build3DManualPromptBody({ accessoriesMode: 'keep', ... })` em `js/prompts.js` |
+| 5 | 3D Character Flow | `accessoriesMode = "remove"` + `styleSource = "manual"` | `build3DManualPromptBody({ accessoriesMode: 'remove', ... })` em `js/prompts.js` |
 
 Roteamento atual:
 - `js/api.js → gerarImagensFluxo1` chama `window.build3DCharacterPrompt(opcoes, blocoExtra)`.
-- O builder usa um **lookup table** com chave `${accessoriesMode}__${styleSource}`. Hoje resolvem: `keep__image1`, `remove__image1`, `remove__image2`.
-- Demais combinações caem num placeholder `[AGUARDANDO PROMPT DEFINITIVO PARA: ...]` e logam um warning no console — sinalizando que esse caso ainda precisa de prompt.
+- O builder primeiro detecta `styleSource === "manual"` (com `accessoriesMode` válido) e delega para `build3DManualPromptBody`, que monta o prompt dinamicamente a partir dos módulos manuais.
+- Para os demais casos, usa o **lookup table** com chave `${accessoriesMode}__${styleSource}`. Resolvem hoje: `keep__image1`, `remove__image1`, `remove__image2`.
+- Combinações restantes (ex: `keep__image2`) caem num placeholder `[AGUARDANDO PROMPT DEFINITIVO PARA: ...]` e logam um warning no console.
 
 Próximos casos prioritários a escrever (sugestão):
 - `keep` + `image2`
-- `manual` (definir sub-casos relevantes — provavelmente um por combinação de Estética × Proporção × Realismo × Material).
 
 > Documento serve como mapa dos prompts que serão escritos depois (fora do Claude). Não escrever prompts finais aqui — só preencher quando aprovados.
 
@@ -84,9 +91,7 @@ Conceito: upload do usuário = identidade/aparência. Imagem da Biblioteca C = p
 
 Conceito: acessórios são itens externos/removíveis (espada, escudo, bolsa, mochila, cajado, props segurados na mão). NÃO incluir como acessórios removíveis: roupa principal, armadura, cabelo, rosto, corpo, calçado, capa quando central pra identidade.
 
-```
-[AGUARDANDO PROMPT DEFINITIVO]
-```
+Status: ✅ Registrado em `js/prompts.js`. Usado pelo `build3DManualPromptBody` no caso `keep__manual`.
 
 ---
 
@@ -95,9 +100,7 @@ Conceito: acessórios são itens externos/removíveis (espada, escudo, bolsa, mo
 **Trigger**: `accessoriesMode = "remove"`.
 **Constante**: `PROMPT_MODULE_ACCESSORIES_REMOVE`
 
-```
-[AGUARDANDO PROMPT DEFINITIVO]
-```
+Status: ✅ Registrado em `js/prompts.js`. Usado pelo `build3DManualPromptBody` no caso `remove__manual`.
 
 ---
 
@@ -129,22 +132,35 @@ Conceito: a estrutura vem da imagem 1, mas a estética visual principal acompanh
 
 ---
 
+## 7-bis. Bloco base do modo manual e regra de fonte de estilo
+
+**Trigger**: `styleSource = "manual"` (em qualquer combinação de `accessoriesMode`).
+
+Dois blocos âncora do modo manual, sempre concatenados:
+
+| Constante | Função |
+|---|---|
+| `PROMPT_3D_MANUAL_SHELL_BASE` | Header geral do modo manual (MULTI-IMAGE INSTRUCTION + IMAGE ROLE LOGIC com Image 1 = só estrutura, Image 2 = só identidade + STRUCTURE RULES + CHARACTER IDENTITY RULES + DEFAULT PRESENTATION + GLOBAL DO NOTS). |
+| `PROMPT_MODULE_STYLE_SOURCE_MANUAL` | Bloco "STYLE SOURCE RULE — MANUAL STYLE": fixa que estilo NÃO vem das imagens, mas dos módulos selecionados. |
+
+Status: ✅ Ambos registrados em `js/prompts.js`. Concatenados pelo `build3DManualPromptBody`.
+
+---
+
 ## 8. Módulos — Estética manual (combináveis)
 
 **Trigger**: `styleSource = "manual"` E o slug correspondente está em `aestheticModifiers[]`.
 São combináveis (multi-select).
 
-| Constante | Slug | Trigger |
-|---|---|---|
-| `PROMPT_MODULE_AESTHETIC_CUTE` | `cute` | usuário marca "Cute" |
-| `PROMPT_MODULE_AESTHETIC_TOY` | `toy` | "Toy" |
-| `PROMPT_MODULE_AESTHETIC_PREMIUM_COLLECTIBLE` | `premium_collectible` | "Premium collectible" |
-| `PROMPT_MODULE_AESTHETIC_DESIGNER_TOY` | `designer_toy` | "Designer toy" |
-| `PROMPT_MODULE_AESTHETIC_STYLIZED_STATUE` | `stylized_statue` | "Stylized statue" |
+| Constante | Slug | Trigger | Status |
+|---|---|---|---|
+| `PROMPT_MODULE_AESTHETIC_CUTE` | `cute` | "Cute" | ✅ Registrado |
+| `PROMPT_MODULE_AESTHETIC_TOY` | `toy` | "Toy" | ✅ Registrado |
+| `PROMPT_MODULE_AESTHETIC_PREMIUM_COLLECTIBLE` | `premium_collectible` | "Premium collectible" | ✅ Registrado |
+| `PROMPT_MODULE_AESTHETIC_DESIGNER_TOY` | `designer_toy` | "Designer toy" | ✅ Registrado |
+| `PROMPT_MODULE_AESTHETIC_STYLIZED_STATUE` | `stylized_statue` | "Stylized statue" | ✅ Registrado |
 
-```
-[AGUARDANDO PROMPT DEFINITIVO — UM PARA CADA]
-```
+Roteados via `AESTHETIC_PROMPT_MAP` em `js/prompts.js`.
 
 ---
 
@@ -152,16 +168,12 @@ São combináveis (multi-select).
 
 **Trigger**: `styleSource = "manual"` E `proportionPreset = <slug>`.
 
-| Constante | Slug | Trigger |
-|---|---|---|
-| `PROMPT_MODULE_PROPORTION_DEFAULT` | `default` | "Padrão" (default) |
-| `PROMPT_MODULE_PROPORTION_CHIBI` | `chibi` | "Chibi" |
+| Constante | Slug | Trigger | Status |
+|---|---|---|---|
+| `PROMPT_MODULE_PROPORTION_DEFAULT` | `default` | "Padrão" (default) | ✅ Registrado |
+| `PROMPT_MODULE_PROPORTION_CHIBI` | `chibi` | "Chibi" | ✅ Registrado |
 
-Observação: Chibi altera proporção corporal de forma significativa. Não é uma simples tag estética — vai virar bloco forte de prompt.
-
-```
-[AGUARDANDO PROMPT DEFINITIVO]
-```
+Observação: Chibi altera proporção corporal de forma significativa. Não é uma simples tag estética — é bloco forte de prompt. Conflitos com Realistic / Semi-realistic estão em "Conflitos conhecidos".
 
 ---
 
@@ -169,15 +181,11 @@ Observação: Chibi altera proporção corporal de forma significativa. Não é 
 
 **Trigger**: `styleSource = "manual"` E `realismLevel = <slug>`.
 
-| Constante | Slug | Trigger |
-|---|---|---|
-| `PROMPT_MODULE_REALISM_STYLIZED` | `stylized` | "Estilizado" (default) |
-| `PROMPT_MODULE_REALISM_SEMI_REALISTIC` | `semi_realistic` | "Semi-realistic" |
-| `PROMPT_MODULE_REALISM_REALISTIC` | `realistic` | "Realistic" |
-
-```
-[AGUARDANDO PROMPT DEFINITIVO]
-```
+| Constante | Slug | Trigger | Status |
+|---|---|---|---|
+| `PROMPT_MODULE_REALISM_STYLIZED` | `stylized` | "Estilizado" (default) | ✅ Registrado |
+| `PROMPT_MODULE_REALISM_SEMI_REALISTIC` | `semi_realistic` | "Semi-realistic" | ✅ Registrado |
+| `PROMPT_MODULE_REALISM_REALISTIC` | `realistic` | "Realistic" | ✅ Registrado |
 
 ---
 
@@ -185,15 +193,11 @@ Observação: Chibi altera proporção corporal de forma significativa. Não é 
 
 **Trigger**: `styleSource = "manual"` E `materialFinish = <slug>`.
 
-| Constante | Slug | Trigger |
-|---|---|---|
-| `PROMPT_MODULE_MATERIAL_MATTE_VINYL` | `matte_vinyl` | "Matte vinyl" (default) |
-| `PROMPT_MODULE_MATERIAL_SMOOTH_RESIN` | `smooth_resin` | "Smooth resin" |
-| `PROMPT_MODULE_MATERIAL_PAINTED_RESIN` | `painted_collectible_resin` | "Painted collectible resin" |
-
-```
-[AGUARDANDO PROMPT DEFINITIVO]
-```
+| Constante | Slug | Trigger | Status |
+|---|---|---|---|
+| `PROMPT_MODULE_MATERIAL_MATTE_VINYL` | `matte_vinyl` | "Matte vinyl" (default) | ✅ Registrado |
+| `PROMPT_MODULE_MATERIAL_SMOOTH_RESIN` | `smooth_resin` | "Smooth resin" | ✅ Registrado |
+| `PROMPT_MODULE_MATERIAL_PAINTED_RESIN` | `painted_collectible_resin` | "Painted collectible resin" | ✅ Registrado |
 
 ---
 
@@ -201,15 +205,11 @@ Observação: Chibi altera proporção corporal de forma significativa. Não é 
 
 **Trigger**: `styleSource = "manual"` E o slug está em `technicalModifiers[]`.
 
-| Constante | Slug | Trigger |
-|---|---|---|
-| `PROMPT_MODULE_TECHNICAL_PRINT_FRIENDLY` | `print_friendly` | "3D print friendly" |
+| Constante | Slug | Trigger | Status |
+|---|---|---|---|
+| `PROMPT_MODULE_TECHNICAL_PRINT_FRIENDLY` | `print_friendly` | "3D print friendly" | ✅ Registrado |
 
 Conceito: regra técnica, não estilo visual. Ativa: formas sólidas, detalhes robustos, evitar partes muito finas, evitar elementos flutuantes, evitar fios soltos, silhueta limpa.
-
-```
-[AGUARDANDO PROMPT DEFINITIVO]
-```
 
 ---
 
@@ -244,9 +244,7 @@ A lógica futura precisa ser condicional:
 - Se houver mãos visíveis → respeitar a posição.
 - Se não tiver mãos visíveis → não inventar mãos.
 
-```
-[AGUARDANDO PROMPT DEFINITIVO]
-```
+Status: ✅ Registrado em `js/prompts.js` como `PROMPT_GLOBAL_ANTI_INTERFERENCE`. Concatenado por último no `build3DManualPromptBody`, antes do bloco `USER ADDITIONAL INSTRUCTIONS`.
 
 ---
 

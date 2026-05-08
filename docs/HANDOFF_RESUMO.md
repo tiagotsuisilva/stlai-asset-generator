@@ -1,11 +1,78 @@
 # Handoff — Resumo (lê este primeiro)
 
-> Atualizado em: 07/05/2026 (segunda revisão)
+> Atualizado em: 08/05/2026 (sétima revisão — primeiro prompt definitivo preenchido)
 > Para detalhes completos: [`HANDOFF.md`](./HANDOFF.md)
 
 ## Estado atual
 
-MVP completo, deployado, rodando em mock. **Reestruturação 3 fluxos + 1º caso real consolidado**: 3 fluxos modulares (3D / 2D / Pose Transfer), Biblioteca C, blocos modulares (Acessórios / Estilo / Estética / Proporção / Realismo / Material / Técnico), upload clicável, lightbox. Primeiro caso real do 3D (`accessoriesMode = keep` + `styleSource = image1`) registrado e ativo. Demais casos aguardando prompts.
+MVP completo, deployado, rodando em mock. **Estratégia de prompts do 3D Character Flow é "prompt completo por caso"**: a montagem modular antiga foi desativada e marcada como DEPRECATED em `js/prompts.js`. A UI seleciona um único `promptId` que aponta para um prompt completo no mapa `PROMPTS_3D_CHARACTER_FLOW`. **1/12 prompts já está definitivo** (`THREED_KEEP_ACCESSORIES_STYLE_IMAGE1`); os outros 11 continuam em placeholder.
+
+## Última mudança — Primeiro prompt definitivo (08/05/2026 — sétima revisão)
+
+- `THREED_KEEP_ACCESSORIES_STYLE_IMAGE1` preenchido em `js/prompts.js` (template literal dentro do mapa) e em `docs/PROMPTS_3D_CHARACTER_FLOW.md` (seção do prompt + status na tabela como ✅ definitivo).
+- Caso correspondente: `accessoriesMode = keep` + `styleSource = image1`. Image 1 dita estrutura **e** estilo; Image 2 dita identidade **e** props/acessórios.
+- O builder `build3DCharacterPrompt` agora deixa de logar warning de placeholder pra esse caso e devolve o prompt definitivo.
+- Sem mudança em arquitetura, na UI ou em outros prompts.
+
+A área "Personalização Manual" do 3D Flow estava aparecendo mesmo quando deveria ficar escondida (CSS `.manual-block { display: flex }` sobrescrevia o atributo `[hidden]`). Agora há regra `.manual-block[hidden] { display: none }` — área aparece **apenas** quando `styleSource = manual`, e o botão "Abrir Biblioteca A" sobe naturalmente quando ela está oculta. Mesma correção aplicada implicitamente ao Pose Flow (mesmo seletor).
+
+## Última mudança — Estratégia "prompt completo por caso" (08/05/2026 — sexta revisão)
+
+### Por que mudou
+
+A montagem modular antiga (5 casos consolidados: 3 via imagem + 2 via modo manual via `build3DManualPromptBody`) gerava resultados inconsistentes em runtime e era difícil de depurar. Trocamos por um modelo simples: cada combinação importante da UI → um `promptId` → um prompt completo autocontido.
+
+### O que mudou no código
+
+- **`js/prompts.js`**:
+  - Novo mapa `PROMPTS_3D_CHARACTER_FLOW` com 12 `promptId`s, todos `[AGUARDANDO PROMPT DEFINITIVO]`.
+  - Nova função `resolve3DCharacterPromptId(options)` — recebe `appState.threeDFlowOptions` e devolve o `promptId` correspondente (ou `null` se for combinação manual sem preset definido).
+  - `build3DCharacterPrompt(opcoes, blocoExtra)` reescrito: usa o resolver e o mapa novo. Anexa `USER ADDITIONAL INSTRUCTIONS` se houver bloco extra.
+  - `build3DManualPromptBody`, `PROMPT_3D_CASE_*` e mapas auxiliares (`AESTHETIC_PROMPT_MAP` etc.) marcados como **DEPRECATED** via comentários — mantidos no arquivo só como referência histórica, não chamados pelo pipeline.
+  - Exports novos: `window.PROMPTS_3D_CHARACTER_FLOW`, `window.resolve3DCharacterPromptId`.
+
+- **`css/style.css`**: regra nova `.manual-block[hidden] { display: none; }` corrige o bug em que a área manual ficava sempre visível.
+
+- **`js/api.js`**: sem mudanças — continua chamando `window.build3DCharacterPrompt(opcoes, blocoExtra)` (a interface do builder é a mesma).
+
+- **`index.html`**: sem mudanças — UI permanece idêntica. Os blocos da Personalização Manual já tinham `hidden` por padrão; o handler em `ui-flows.js` já liga/desliga via `data-toggle-manual="manual-block-3d"`. Só faltava a regra CSS pra `[hidden]` ser respeitada.
+
+### Resolução do `promptId`
+
+| `styleSource` | `accessoriesMode` | `promptId` |
+|---|---|---|
+| `image1` | `keep` | `THREED_KEEP_ACCESSORIES_STYLE_IMAGE1` |
+| `image1` | `remove` | `THREED_REMOVE_ACCESSORIES_STYLE_IMAGE1` |
+| `image2` | `keep` | `THREED_KEEP_ACCESSORIES_STYLE_IMAGE2` |
+| `image2` | `remove` | `THREED_REMOVE_ACCESSORIES_STYLE_IMAGE2` |
+| `manual` | (varia) | um dos 8 presets manuais — match heurístico, ou `null` (placeholder genérico + warning) |
+
+Os 8 presets manuais e regras de match estão documentados em [`PROMPTS_3D_CHARACTER_FLOW.md`](./PROMPTS_3D_CHARACTER_FLOW.md).
+
+### Documentação
+
+- [`PROMPTS_3D_CHARACTER_FLOW.md`](./PROMPTS_3D_CHARACTER_FLOW.md) — **fonte da verdade** para os prompts do 3D Flow daqui pra frente. Tabela + seção por `promptId` + regras de match + processo de preenchimento.
+- [`PROMPTS_TODO.md`](./PROMPTS_TODO.md) — marcado como DEPRECATED para o 3D Flow no topo do arquivo. Permanece como referência histórica e ainda relevante para os outros fluxos (2D, Pose).
+
+## Última mudança — Modo manual completo do 3D Flow (07/05/2026 — quinta revisão)
+
+- **Casos novos consolidados**: `accessoriesMode = "keep"` + `styleSource = "manual"` e `accessoriesMode = "remove"` + `styleSource = "manual"`.
+- **Builder dinâmico** `build3DManualPromptBody(opcoes)` em `js/prompts.js` concatena, nesta ordem:
+  1. `PROMPT_3D_MANUAL_SHELL_BASE` — header (Image 1 = só estrutura, Image 2 = só identidade).
+  2. `PROMPT_MODULE_STYLE_SOURCE_MANUAL` — fixa que estilo NÃO vem das imagens.
+  3. `PROMPT_MODULE_ACCESSORIES_KEEP` ou `_REMOVE`.
+  4. Estética (cada slug em `aestheticModifiers[]`, multi).
+  5. Proporção (`PROMPT_MODULE_PROPORTION_DEFAULT` ou `_CHIBI`).
+  6. Realismo (`_STYLIZED` / `_SEMI_REALISTIC` / `_REALISTIC`).
+  7. Material (`_MATTE_VINYL` / `_SMOOTH_RESIN` / `_PAINTED_RESIN`).
+  8. Técnico (cada slug em `technicalModifiers[]`, multi).
+  9. `PROMPT_GLOBAL_ANTI_INTERFERENCE` — regras condicionais por último.
+  10. `USER ADDITIONAL INSTRUCTIONS` (anexado pelo `build3DCharacterPrompt`).
+- `build3DCharacterPrompt` ganhou roteamento: se `styleSource === "manual"` (com `accessoriesMode` `keep` ou `remove`), delega pro builder modular. Demais casos seguem usando o lookup table dos casos consolidados (`keep__image1`, `remove__image1`, `remove__image2`).
+- Casos consolidados antigos preservados — smoke test confirma que blocos manuais não vazam pra eles.
+- `PROMPT_GLOBAL_ANTI_INTERFERENCE` substituído pelo conteúdo definitivo (regras condicionais, nunca fixas).
+- Mapas auxiliares: `AESTHETIC_PROMPT_MAP`, `PROPORTION_PROMPT_MAP`, `REALISM_PROMPT_MAP`, `MATERIAL_PROMPT_MAP`, `TECHNICAL_PROMPT_MAP`.
+- `docs/PROMPTS_TODO.md` atualizado: 5 casos consolidados na tabela, todos os módulos manuais marcados como ✅ Registrado.
 
 ## Última mudança — Terceiro caso real do 3D Flow (07/05/2026 — quarta revisão)
 
@@ -92,7 +159,7 @@ MVP completo, deployado, rodando em mock. **Reestruturação 3 fluxos + 1º caso
 ## Pendências críticas (bloqueantes pro Demo Day)
 
 1. Renomear 7 .jpg da Biblioteca A pros IDs corretos (lista no `HANDOFF.md`).
-2. **Escrever os prompts definitivos** em `js/prompts.js` substituindo os `[AGUARDANDO PROMPT DEFINITIVO]`. Mapa em `docs/PROMPTS_TODO.md`.
+2. **Preencher os 11 prompts restantes do 3D Character Flow** em `PROMPTS_3D_CHARACTER_FLOW.md` (seções) e `js/prompts.js` (mapa `PROMPTS_3D_CHARACTER_FLOW`). 1/12 já preenchido (`THREED_KEEP_ACCESSORIES_STYLE_IMAGE1`).
 3. Validar nome do modelo OpenAI (`gpt-image-2` vs `gpt-image-1`).
 4. Substituir stub `callTripoAPI()` pela integração real da STLFLIX.
 

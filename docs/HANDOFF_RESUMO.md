@@ -1,18 +1,17 @@
 # Handoff — Resumo (lê este primeiro)
 
-> Atualizado em: 08/05/2026 (décima quarta revisão — par chibi cute toy fechado)
+> Atualizado em: 08/05/2026 (décima quinta revisão — semi-realistic statue keep preenchido)
 > Para detalhes completos: [`HANDOFF.md`](./HANDOFF.md)
 
 ## Estado atual
 
-MVP completo, deployado, rodando em mock. **Estratégia de prompts do 3D Character Flow é "prompt completo por caso"**: a montagem modular antiga foi desativada e marcada como DEPRECATED em `js/prompts.js`. A UI seleciona um único `promptId` que aponta para um prompt completo no mapa `PROMPTS_3D_CHARACTER_FLOW`. **8/12 prompts já estão definitivos** — todos os 4 casos com estilo da imagem + par cute toy premium (keep + remove) + par chibi cute toy (keep + remove). Faltam 4 presets manuais.
+MVP completo, deployado, rodando em mock. **Estratégia de prompts do 3D Character Flow é "prompt completo por caso"**: a montagem modular antiga foi desativada e marcada como DEPRECATED em `js/prompts.js`. A UI seleciona um único `promptId` que aponta para um prompt completo no mapa `PROMPTS_3D_CHARACTER_FLOW`. **9/12 prompts já estão definitivos** — todos os 4 casos com estilo da imagem + par cute toy premium + par chibi cute toy + semi-realistic statue resin (keep). Faltam 3 presets manuais.
 
-## Última mudança — Par chibi cute toy fechado (08/05/2026 — décima quarta revisão)
+## Última mudança — Semi-realistic statue keep preenchido (08/05/2026 — décima quinta revisão)
 
-- `THREED_MANUAL_CHIBI_CUTE_TOY_MATTE_REMOVE_ACCESSORIES` preenchido em `js/prompts.js` (template literal dentro do mapa) e em `docs/PROMPTS_3D_CHARACTER_FLOW.md` (seção do prompt + status na tabela como ✅ definitivo, descrição expandida com state completo da UI).
-- Caso correspondente: `accessoriesMode = remove` + `styleSource = manual` + cute/toy + chibi + matte vinyl + realismo stylized.
-- Marco: o **par chibi cute toy** (keep + remove) está completo. Junto com o par cute toy premium, são 2/4 pares manuais fechados.
-- Próximos: 4 presets manuais restantes — semi-realistic statue resin keep/remove + realistic painted resin keep/remove.
+- `THREED_MANUAL_SEMIREALISTIC_STATUE_RESIN_KEEP_ACCESSORIES` preenchido em `js/prompts.js` (template literal dentro do mapa) e em `docs/PROMPTS_3D_CHARACTER_FLOW.md` (seção do prompt + status na tabela como ✅ definitivo, descrição expandida com state completo da UI).
+- Caso correspondente: `accessoriesMode = keep` + `styleSource = manual` + stylized_statue + proporção default + realismo semi_realistic + smooth resin.
+- Próximos: 3 presets manuais restantes — semi-realistic statue resin remove + realistic painted resin keep/remove.
 - Sem mudança em arquitetura, na UI ou em outros prompts.
 
 A área "Personalização Manual" do 3D Flow estava aparecendo mesmo quando deveria ficar escondida (CSS `.manual-block { display: flex }` sobrescrevia o atributo `[hidden]`). Agora há regra `.manual-block[hidden] { display: none }` — área aparece **apenas** quando `styleSource = manual`, e o botão "Abrir Biblioteca A" sobe naturalmente quando ela está oculta. Mesma correção aplicada implicitamente ao Pose Flow (mesmo seletor).
@@ -160,7 +159,7 @@ Os 8 presets manuais e regras de match estão documentados em [`PROMPTS_3D_CHARA
 ## Pendências críticas (bloqueantes pro Demo Day)
 
 1. Renomear 7 .jpg da Biblioteca A pros IDs corretos (lista no `HANDOFF.md`).
-2. **Preencher os 4 presets manuais restantes do 3D Character Flow** (`THREED_MANUAL_*`) em `PROMPTS_3D_CHARACTER_FLOW.md` e `js/prompts.js`. 8/12 já preenchidos (4 casos por imagem + par cute toy premium matte print keep/remove + par chibi cute toy matte keep/remove).
+2. **Preencher os 3 presets manuais restantes do 3D Character Flow** (`THREED_MANUAL_*`) em `PROMPTS_3D_CHARACTER_FLOW.md` e `js/prompts.js`. 9/12 já preenchidos (4 casos por imagem + par cute toy premium + par chibi cute toy + semi-realistic statue resin keep).
 3. Validar nome do modelo OpenAI (`gpt-image-2` vs `gpt-image-1`).
 4. Substituir stub `callTripoAPI()` pela integração real da STLFLIX.
 

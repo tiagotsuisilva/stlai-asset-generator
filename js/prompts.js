@@ -2927,7 +2927,295 @@ GLOBAL DO NOTS
 - do not create realistic anatomy
 - do not create messy texture
 - do not create cheap glossy plastic`,
-  THREED_MANUAL_SEMIREALISTIC_STATUE_RESIN_KEEP_ACCESSORIES:      PLACEHOLDER,
+  THREED_MANUAL_SEMIREALISTIC_STATUE_RESIN_KEEP_ACCESSORIES: `MULTI-IMAGE INSTRUCTION — 3D CHARACTER FLOW
+CASE: KEEP ACCESSORIES + MANUAL STYLE — SEMI-REALISTIC STYLIZED STATUE SMOOTH RESIN
+
+You will use TWO input images with different functions.
+
+FINAL OUTPUT REQUIREMENT
+Generate a SINGLE final image only.
+Do not output text, labels, panels, sheets, turnarounds, or multiple views.
+
+CORE LOGIC
+
+IMAGE 1 = STRUCTURE SOURCE
+IMAGE 2 = CHARACTER + ACCESSORIES SOURCE
+MANUAL STYLE = FINAL VISUAL STYLE SOURCE
+
+The final image must show the character from Image 2 transformed into the structure, pose, framing, and body visibility of Image 1, while applying the manual semi-realistic stylized statue smooth resin style defined in this prompt.
+
+Do not use Image 1 or Image 2 as the primary visual style source.
+Use Image 1 only for structure.
+Use Image 2 only for character identity, design, colors, clothing, and accessories.
+
+IMAGE 1 ROLE — STRUCTURE SOURCE
+
+Use Image 1 as the source for:
+- pose
+- posture
+- body visibility
+- body crop
+- framing
+- camera angle
+- camera distance
+- composition
+- silhouette
+- visible body proportions
+- head-to-body relationship
+- limb placement
+- hand placement
+- foot placement, if visible
+- support/contact logic
+- presence or absence of base or support surface
+
+Image 1 defines how much of the body exists and is visible in the final result.
+
+Do not use Image 1 as:
+- character identity source
+- face source
+- hair source
+- clothing identity source
+- color source
+- species source
+- primary visual style source
+
+IMAGE 2 ROLE — CHARACTER SOURCE
+
+Use Image 2 as the source for:
+- character identity
+- face and facial features
+- facial expression
+- hairstyle or hair absence
+- facial hair or lack of facial hair
+- outfit / costume / armor / clothing
+- colors
+- species identity, if non-human
+- recognizable body traits
+- recognizable character design
+- props/accessories, according to the accessories rule below
+
+Do not use Image 2 for:
+- pose
+- posture
+- body stance
+- camera angle
+- framing
+- crop
+- composition
+- final body visibility
+- primary visual style
+
+STRUCTURE RULES
+
+Follow Image 1 for all structural decisions.
+- Match the pose and body logic of Image 1.
+- Match the visible body crop of Image 1.
+- Match the camera angle and composition of Image 1.
+- Match the visible body proportions of Image 1.
+- If Image 1 shows only bust, generate only bust.
+- If Image 1 shows half body, generate only half body.
+- If Image 1 shows full body, generate full body.
+- If Image 1 crops the body, respect the same crop.
+- If Image 1 has a base or support surface, preserve its structural logic.
+- If Image 1 does not have a base, do not create a base automatically.
+- Do not invent body parts outside the visible body logic of Image 1.
+- Do not force full body if Image 1 is cropped.
+- Do not force feet, legs, hands, base, or support elements unless supported by Image 1.
+- Do not force seated, standing, action, or display-base logic unless supported by Image 1.
+
+CHARACTER IDENTITY RULES
+
+Preserve the character identity from Image 2.
+- Preserve the face identity from Image 2.
+- Preserve hairstyle, facial hair or absence of facial hair from Image 2.
+- Preserve expression from Image 2 when compatible with the structure and semi-realistic statue style.
+- Preserve outfit, armor, clothing, colors, and recognizable design traits from Image 2.
+- Preserve species identity if Image 2 is non-human.
+- The final result must clearly read as the character from Image 2.
+- Do not merge identities between Image 1 and Image 2.
+- Do not borrow face, hair, outfit, colors, or species identity from Image 1.
+
+ACCESSORIES RULE — KEEP ACCESSORIES FROM IMAGE 2
+
+Preserve visible props and removable accessories from Image 2 when compatible with the pose, crop, and composition from Image 1.
+
+Props/accessories may include:
+- weapons
+- shields
+- tools
+- staffs
+- bags
+- backpacks
+- handheld objects
+- external carried items
+- objects attached externally to the character
+
+Adapt these props naturally into the structure and pose from Image 1 without changing the pose logic.
+
+For this semi-realistic statue style:
+- simplify fragile props into solid sculpted forms
+- preserve the recognizable design of important props
+- make props feel like part of a premium resin statue
+- avoid overly thin, weak, or floating prop details
+
+Do not preserve props from Image 2 if they conflict with the body visibility or crop from Image 1.
+
+Do not treat the following as removable accessories:
+- main clothing
+- armor
+- boots
+- gloves
+- hair
+- beard
+- body parts
+- wings, horns, tail, or anatomy
+- skin, fur, feathers, scales, or natural markings
+- identity-defining outfit elements
+
+If a cape, necklace, belt, sash, or ornament is central to the identity of Image 2, preserve it as part of the character design, not as a removable prop.
+
+MANUAL STYLE RULE — SEMI-REALISTIC STYLIZED STATUE
+
+Apply a semi-realistic stylized statue aesthetic.
+The final result should feel like a premium stylized resin statue or collectible figurine.
+Use:
+- semi-realistic form treatment
+- believable anatomy within the structure of Image 1
+- refined sculptural masses
+- statue-like presence
+- premium collectible composition
+- clean but detailed facial structure
+- readable clothing and armor forms
+- elegant sculpted surfaces
+- balanced stylization, not full photorealism
+
+Do not use the visual style of Image 1 as the main style.
+Do not use the visual style of Image 2 as the main style.
+The style must come from this manual semi-realistic stylized statue rule.
+
+REALISM RULE — SEMI-REALISTIC
+
+Use a semi-realistic 3D treatment.
+Increase:
+- anatomical believability
+- facial structure clarity
+- clothing definition
+- material credibility
+- form depth
+- sculptural realism
+
+But preserve:
+- collectible readability
+- clean presentation
+- controlled stylization
+- premium statue-like finish
+
+Do not become fully photorealistic.
+Do not add messy skin pores, gritty noise, or photographic imperfections.
+Do not turn the result into a realistic human photo.
+Do not override the pose, crop, or body visibility from Image 1.
+
+PROPORTION RULE — DEFAULT STATUE PROPORTIONS
+
+Use default semi-realistic collectible proportions.
+- Preserve the visible proportional logic from Image 1.
+- Do not force chibi proportions.
+- Do not dramatically enlarge the head unless Image 1 already supports that relationship.
+- Do not shrink the body into a toy/chibi format.
+- Keep the figure believable and statue-like while respecting Image 1.
+
+MATERIAL RULE — SMOOTH RESIN
+
+Use a smooth resin collectible finish.
+Surfaces should feel:
+- solid
+- refined
+- premium
+- cleanly sculpted
+- subtly detailed
+- suitable for a polished collectible figurine
+
+Use smooth transitions and controlled surface detail.
+
+Avoid:
+- noisy micro-texture
+- cheap plastic appearance
+- rough unfinished surfaces
+- gritty skin pores
+- messy material breakup
+- excessive gloss
+
+TECHNICAL RULE — STATUE READABILITY
+
+Keep the design readable as a sculptural collectible.
+Use:
+- solid sculpted forms
+- clear silhouette
+- controlled details
+- readable costume forms
+- clean anatomical transitions
+- strong sculptural presence
+
+Avoid:
+- fragile thin elements
+- floating unsupported details
+- excessive micro-detail
+- wispy hair strands
+- messy texture
+- random decorative noise
+
+Do not change the pose, crop, or visible body logic from Image 1.
+Do not remove core character identity from Image 2.
+
+PARTIAL OR NON-HUMAN CHARACTER RULES
+
+If Image 2 is partial, cropped, bust-only, or head-only:
+- use its visible identity traits to infer missing character areas only as needed to fit the structure and body visibility of Image 1
+- inferred areas must remain consistent with the identity, species, colors, outfit logic, and visual traits of Image 2
+- adapt inferred areas into the semi-realistic stylized statue style
+
+If Image 2 is an animal and Image 1 is humanoid:
+- adapt the animal into a semi-realistic anthropomorphic humanoid statue
+- preserve the animal species identity from Image 2
+- preserve key animal traits such as head shape, muzzle or beak, ears, horns, eyes, nose, fur, feathers, scales, markings, and color patterns
+- use the body visibility, pose, posture, crop, and framing from Image 1
+- do not preserve the original quadruped pose from Image 2
+- do not humanize the face so much that the animal identity becomes unclear
+
+If Image 2 is a robot, monster, creature, mask, bust, or partial fantasy character:
+- infer missing body areas consistently with the visible identity from Image 2
+- do not create a generic human body if Image 2 suggests a specific species, creature type, robot design, monster design, or fantasy identity
+- adapt the inferred body to the structure from Image 1 and the manual semi-realistic statue style
+
+USER ADDITIONAL INSTRUCTIONS
+
+Apply user additional instructions only if they do not conflict with:
+- the structure, crop, body visibility, and pose from Image 1
+- the character identity from Image 2
+- the accessories rule of this case
+- the manual semi-realistic stylized statue smooth resin style
+
+If user instructions conflict with those priorities, preserve the priorities above.
+
+GLOBAL DO NOTS
+- do not generate multiple views
+- do not generate a turnaround sheet
+- do not output text
+- do not use Image 1 as character identity
+- do not use Image 2 as pose source
+- do not use Image 1 as primary style source
+- do not use Image 2 as primary style source
+- do not merge identities between the images
+- do not invent body visibility beyond Image 1
+- do not force full body if Image 1 is cropped
+- do not force chibi proportions
+- do not create a base unless Image 1 has one or the user explicitly asks for one
+- do not remove identity-defining clothing or traits from Image 2
+- do not confuse props with clothing, armor, anatomy, or identity-defining traits
+- do not create photorealistic skin pores
+- do not create messy texture
+- do not create cheap glossy plastic
+- do not create toy-like vinyl proportions`,
   THREED_MANUAL_SEMIREALISTIC_STATUE_RESIN_REMOVE_ACCESSORIES:    PLACEHOLDER,
   THREED_MANUAL_REALISTIC_PAINTED_RESIN_KEEP_ACCESSORIES:         PLACEHOLDER,
   THREED_MANUAL_REALISTIC_PAINTED_RESIN_REMOVE_ACCESSORIES:       PLACEHOLDER,

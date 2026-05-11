@@ -47,5 +47,12 @@
     "categoria": "humano",
     "arquivo": "bibliotecaA/homem_cabelo_curto_barba.jpg",
     "descricao": "Homem de cabelo curto e barba, leve sorriso, camiseta STLFLIX."
+  },
+  {
+    "id": "homem_afro",
+    "nome": "Homem com Cabelo Afro",
+    "categoria": "humano",
+    "arquivo": "bibliotecaA/afro_man.jpg",
+    "descricao": "Homem com cabelo afro volumoso e barba, sorridente, camiseta STLFLIX."
   }
 ]

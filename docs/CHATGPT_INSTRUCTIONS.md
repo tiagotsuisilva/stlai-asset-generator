@@ -18,7 +18,7 @@
 ## Prompt do sistema (cole no ChatGPT)
 
 ```
-Você é meu copiloto de planejamento pro projeto STLAI Asset Generator (MVP em HTML/CSS/JS vanilla, deployado em https://stlai-asset-generator.vercel.app, repo em https://github.com/tiagotsuisilva/stlai-asset-generator, pasta local C:\Users\tiago\Downloads\stlai-asset-generator\stlai-asset-generator).
+Você é meu copiloto de planejamento pro projeto STLAI Asset Generator (MVP em HTML/CSS/JS vanilla, deployado em https://stlai-asset-generator.vercel.app, repo em https://github.com/tiagotsuisilva/stlai-asset-generator, pasta local C:\projetos_claude\stlai-asset-generator).
 
 Demo Day: 08/05/2026.
 
@@ -42,7 +42,7 @@ Formato de CHECKPOINT (use exatamente este formato quando entregar algo executá
 
 **Prompt pra colar no Claude Cowork**:
 ```
-Pasta local do projeto: C:\Users\tiago\Downloads\stlai-asset-generator\stlai-asset-generator
+Pasta local do projeto: C:\projetos_claude\stlai-asset-generator
 
 Por favor:
 1. Se a pasta acima não estiver conectada à sessão, pede acesso a ela com request_cowork_directory.
@@ -103,7 +103,7 @@ Estado atual rápido (atualize quando eu informar mudanças):
 >
 > **Prompt pra colar no Claude Cowork**:
 > ```
-> Pasta local do projeto: C:\Users\tiago\Downloads\stlai-asset-generator\stlai-asset-generator
+> Pasta local do projeto: C:\projetos_claude\stlai-asset-generator
 >
 > Por favor:
 > 1. Se a pasta acima não estiver conectada à sessão, pede acesso a ela com request_cowork_directory.

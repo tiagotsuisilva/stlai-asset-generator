@@ -1,11 +1,17 @@
 # Handoff — Resumo (lê este primeiro)
 
-> Atualizado em: 08/05/2026 (décima nona revisão — **Biblioteca C populada** com 17 poses reais)
+> Atualizado em: 11/05/2026 (vigésima revisão — **Pasta local movida pra `C:\projetos_claude\`**)
 > Para detalhes completos: [`HANDOFF.md`](./HANDOFF.md)
 
 ## Estado atual
 
-MVP completo, deployado, rodando em mock. **Biblioteca C (poses) populada com 17 imagens reais** (`pose1.png`..`pose17.png`) — Pose Transfer Flow agora pode ser navegado de ponta a ponta. **Estratégia de prompts do 3D Character Flow é "prompt completo por caso"**: a montagem modular antiga foi desativada e marcada como DEPRECATED em `js/prompts.js`. A UI seleciona um único `promptId` que aponta para um prompt completo no mapa `PROMPTS_3D_CHARACTER_FLOW`. **12/12 prompts definitivos** — todo o 3D Character Flow está com prompts completos: 4 casos por imagem (image1/image2 × keep/remove) + 4 pares manuais (cute toy premium, chibi cute toy, semi-realistic statue resin, realistic painted resin × keep/remove).
+MVP completo, deployado, rodando em mock. **Pasta local agora em `C:\projetos_claude\stlai-asset-generator`** (saiu de `Downloads/`). Vercel e GitHub não afetados — auto-deploy continua funcionando normalmente. **Biblioteca C (poses) populada com 17 imagens reais** (`pose1.png`..`pose17.png`) — Pose Transfer Flow agora pode ser navegado de ponta a ponta. **Estratégia de prompts do 3D Character Flow é "prompt completo por caso"**: a montagem modular antiga foi desativada e marcada como DEPRECATED em `js/prompts.js`. A UI seleciona um único `promptId` que aponta para um prompt completo no mapa `PROMPTS_3D_CHARACTER_FLOW`. **12/12 prompts definitivos** — todo o 3D Character Flow está com prompts completos: 4 casos por imagem (image1/image2 × keep/remove) + 4 pares manuais (cute toy premium, chibi cute toy, semi-realistic statue resin, realistic painted resin × keep/remove).
+
+## Última mudança — Pasta local movida (11/05/2026 — vigésima revisão)
+
+- Pasta local saiu de `C:\Users\tiago\Downloads\stlai-asset-generator\stlai-asset-generator` pra `C:\projetos_claude\stlai-asset-generator`. Motivo: Downloads não é bom local pra projeto longo-prazo; OneDrive foi descartado por causa de conflitos potenciais com `.git`.
+- Vercel e GitHub não afetados — o deploy continua sendo trigger do push pra `main` no GitHub, independente da pasta local.
+- Path antigo substituído em `CLAUDE.md`, `docs/HANDOFF.md`, `docs/HANDOFF_RESUMO.md`, `docs/CHATGPT_INSTRUCTIONS.md`. Nome final é tudo minúsculo com underscore (`projetos_claude`) — sem espaço, então blocos PowerShell não precisam de aspas no `cd`.
 
 ## Última mudança — Biblioteca C populada (08/05/2026 — décima nona revisão)
 
@@ -115,7 +121,7 @@ Os 8 presets manuais e regras de match estão documentados em [`PROMPTS_3D_CHARA
 
 - **App**: https://stlai-asset-generator.vercel.app
 - **Repo**: https://github.com/tiagotsuisilva/stlai-asset-generator
-- **Local**: `C:\Users\tiago\Downloads\stlai-asset-generator\stlai-asset-generator`
+- **Local**: `C:\projetos_claude\stlai-asset-generator`
 - **Demo Day**: 08/05/2026
 
 ## Última mudança — 3 fluxos modulares + Pose Transfer (07/05/2026)
@@ -206,7 +212,7 @@ appState.threeDFlowOptions = {
 ## Como rodar local
 
 ```powershell
-cd C:\Users\tiago\Downloads\stlai-asset-generator\stlai-asset-generator
+cd C:\projetos_claude\stlai-asset-generator
 npx serve
 ```
 
@@ -224,7 +230,7 @@ npx serve
 Estou continuando o projeto STLAI Asset Generator.
 
 Pasta local do projeto:
-C:\Users\tiago\Downloads\stlai-asset-generator\stlai-asset-generator
+C:\projetos_claude\stlai-asset-generator
 
 Por favor:
 1. Pede acesso a essa pasta (use a ferramenta request_cowork_directory com esse caminho exato).

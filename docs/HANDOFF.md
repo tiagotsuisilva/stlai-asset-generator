@@ -69,8 +69,8 @@
 
 ## 🚀 Como rodar localmente
 
-```
-cd C:\Users\tiago\Downloads\stlai-asset-generator\stlai-asset-generator
+```powershell
+cd C:\projetos_claude\stlai-asset-generator
 npx serve
 ```
 
@@ -91,12 +91,12 @@ Cola o bloco abaixo (entre as linhas tracejadas) **inteiro** numa conversa nova:
 > Contexto rápido:
 > - **App ao vivo**: https://stlai-asset-generator.vercel.app
 > - **Repo GitHub**: https://github.com/tiagotsuisilva/stlai-asset-generator
-> - **Pasta local**: `C:\Users\tiago\Downloads\stlai-asset-generator\stlai-asset-generator`
+> - **Pasta local**: `C:\projetos_claude\stlai-asset-generator`
 >
 > Antes de qualquer coisa, lê estes 3 arquivos pra pegar contexto completo:
-> 1. `C:\Users\tiago\Downloads\stlai-asset-generator\stlai-asset-generator\docs\HANDOFF.md` — estado atual e pendências
-> 2. `C:\Users\tiago\Downloads\stlai-asset-generator\stlai-asset-generator\docs\PRD_STLAI_Asset_Generator.md` — PRD v1.1 completo
-> 3. `C:\Users\tiago\Downloads\stlai-asset-generator\stlai-asset-generator\README.md` — instruções de uso
+> 1. `C:\projetos_claude\stlai-asset-generator\docs\HANDOFF.md` — estado atual e pendências
+> 2. `C:\projetos_claude\stlai-asset-generator\docs\PRD_STLAI_Asset_Generator.md` — PRD v1.1 completo
+> 3. `C:\projetos_claude\stlai-asset-generator\README.md` — instruções de uso
 >
 > Confirma quando tiver lido e me diz por onde começamos.
 

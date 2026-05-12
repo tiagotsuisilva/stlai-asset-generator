@@ -399,11 +399,13 @@ async function gerar3DTripo({ imagensSelecionadas, parametros, onProgress }) {
 
     try {
       let blob;
-      if (window.isMockMode() || !window.CONFIG.TRIPO_API_KEY) {
+      if (window.isMockMode()) {
         await sleep(500);
         blob = mockModel3D(img.sourceItem.nome, i);
       } else {
-        // PLACEHOLDER — substituir pela chamada real da Tripo do MVP existente.
+        // Chama o proxy local (Vercel Edge Function). A TRIPO_API_KEY é
+        // injetada server-side pelo proxy; o front não precisa mais
+        // armazenar a chave da Tripo no localStorage.
         blob = await callTripoAPI(img.dataUrl, parametros);
       }
       results.push({
@@ -426,12 +428,134 @@ async function gerar3DTripo({ imagensSelecionadas, parametros, onProgress }) {
 }
 
 /**
- * STUB da chamada real da Tripo. Substituir pela integração do MVP
- * existente na STLFLIX (mesma key, mesmos parâmetros).
+ * Integração real com a API da Tripo3D (image-to-3D).
+ *
+ * Fluxo: upload da imagem → cria task image_to_model → polling do status
+ * → baixa o GLB final e devolve como Blob.
+ *
+ * IMPORTANTE — a Tripo3D não permite chamada direta do browser (CORS).
+ * Por isso o front bate em /api/tripo/* (proxy Vercel Edge Function),
+ * que injeta a TRIPO_API_KEY server-side e repassa pra Tripo.
+ *
+ * Setup:
+ *   - Local: `vercel dev` com TRIPO_API_KEY em .env.local
+ *   - Produção: variável de ambiente TRIPO_API_KEY no painel do Vercel
+ *
+ * NOTA — Fase 1 (smoke test): só passa os parâmetros mínimos pra ver
+ * a chamada funcionar end-to-end. O mapeamento completo dos params da
+ * UI (versão do modelo, formato OBJ/FBX, etc.) é Fase 2.
  */
+const TRIPO_BASE_URL = '/api/tripo';
+const TRIPO_POLL_INTERVAL_MS = 5000;
+const TRIPO_MAX_POLLS = 120; // 120 * 5s = 10 min máx
+
 async function callTripoAPI(imageDataUrl, parametros) {
-  // Substituir pela integração real do MVP existente da STLFLIX.
-  throw new Error('STUB: substitua callTripoAPI() pela integração real.');
+  // A autenticação agora é feita server-side pelo proxy (api/tripo/[...path].js)
+  // usando a TRIPO_API_KEY da env. O front não manda mais Authorization.
+  const authHeaders = {};
+
+  // 1) Upload da imagem ---------------------------------------------------
+  const imgBlob = dataURLToBlob(imageDataUrl);
+  let ext = (imgBlob.type.split('/')[1] || 'png').toLowerCase();
+  if (ext === 'jpeg') ext = 'jpg';
+  const filename = `upload.${ext}`;
+
+  const fd = new FormData();
+  fd.append('file', imgBlob, filename);
+
+  console.log('[Tripo] uploading image…', { size: imgBlob.size, type: imgBlob.type });
+  const upResp = await fetch(`${TRIPO_BASE_URL}/upload`, {
+    method: 'POST',
+    headers: authHeaders,
+    body: fd,
+  });
+  if (!upResp.ok) {
+    const txt = await upResp.text();
+    throw new Error(`Tripo upload falhou (${upResp.status}): ${txt}`);
+  }
+  const upJson = await upResp.json();
+  // O SDK chama de file_token no body do /task, mas a resposta do upload
+  // pode vir como image_token ou file_token dependendo da versão. Aceita os dois.
+  const fileToken =
+    upJson?.data?.image_token ||
+    upJson?.data?.file_token ||
+    upJson?.data?.token;
+  if (!fileToken) {
+    throw new Error(`Tripo upload sem token: ${JSON.stringify(upJson)}`);
+  }
+  console.log('[Tripo] upload ok, file_token:', fileToken);
+
+  // 2) Criar task image-to-model -----------------------------------------
+  const taskBody = {
+    type: 'image_to_model',
+    file: { type: ext, file_token: fileToken },
+  };
+  // Polycount opcional — só passa se o usuário desligou o "Auto".
+  if (parametros && parametros.polycountAuto === false && parametros.polycount) {
+    taskBody.face_limit = Number(parametros.polycount);
+  }
+  console.log('[Tripo] creating task…', taskBody);
+  const taskResp = await fetch(`${TRIPO_BASE_URL}/task`, {
+    method: 'POST',
+    headers: { ...authHeaders, 'Content-Type': 'application/json' },
+    body: JSON.stringify(taskBody),
+  });
+  if (!taskResp.ok) {
+    const txt = await taskResp.text();
+    throw new Error(`Tripo create task falhou (${taskResp.status}): ${txt}`);
+  }
+  const taskJson = await taskResp.json();
+  const taskId = taskJson?.data?.task_id;
+  if (!taskId) {
+    throw new Error(`Tripo sem task_id: ${JSON.stringify(taskJson)}`);
+  }
+  console.log('[Tripo] task criada:', taskId);
+
+  // 3) Polling do status --------------------------------------------------
+  let modelUrl = null;
+  for (let i = 0; i < TRIPO_MAX_POLLS; i++) {
+    await sleep(TRIPO_POLL_INTERVAL_MS);
+    const sResp = await fetch(`${TRIPO_BASE_URL}/task/${taskId}`, { headers: authHeaders });
+    if (!sResp.ok) {
+      const txt = await sResp.text();
+      throw new Error(`Tripo polling falhou (${sResp.status}): ${txt}`);
+    }
+    const sJson = await sResp.json();
+    const data = sJson?.data || {};
+    const status = data.status;
+    const progress = data.progress;
+    console.log(`[Tripo] task ${taskId}: ${status}${progress !== undefined ? ` (${progress}%)` : ''}`);
+
+    if (status === 'success') {
+      const out = data.output || data.result || {};
+      modelUrl =
+        out.pbr_model ||
+        out.model ||
+        out.base_model ||
+        (typeof out === 'string' ? out : null);
+      if (!modelUrl) {
+        throw new Error(`Tripo success mas sem URL: ${JSON.stringify(data)}`);
+      }
+      break;
+    }
+    if (status === 'failed' || status === 'cancelled' || status === 'banned') {
+      throw new Error(`Tripo task ${status}: ${JSON.stringify(data)}`);
+    }
+    // queued / running / unknown → segue polling
+  }
+  if (!modelUrl) {
+    throw new Error('Tripo timeout esperando modelo 3D (10 min).');
+  }
+  console.log('[Tripo] modelo pronto:', modelUrl);
+
+  // 4) Baixar o GLB ------------------------------------------------------
+  const modelResp = await fetch(modelUrl);
+  if (!modelResp.ok) {
+    throw new Error(`Tripo download do modelo falhou (${modelResp.status}).`);
+  }
+  const blob = await modelResp.blob();
+  console.log('[Tripo] GLB baixado, size:', blob.size);
+  return blob;
 }
 
 

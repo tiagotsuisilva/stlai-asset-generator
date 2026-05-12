@@ -1,7 +1,21 @@
 # Handoff — Resumo (lê este primeiro)
 
-> Atualizado em: 11/05/2026 (vigésima revisão — **Pasta local movida pra `C:\projetos_claude\`**)
+> Atualizado em: 12/05/2026 (vigésima primeira revisão — **Integração Tripo3D real via proxy Vercel**)
 > Para detalhes completos: [`HANDOFF.md`](./HANDOFF.md)
+
+## Última mudança — Tripo3D real integrada via proxy (12/05/2026 — vigésima primeira revisão)
+
+- **Problema**: `callTripoAPI()` era stub. Implementei a chamada real (`POST /upload` → `POST /task` image_to_model → polling `GET /task/{id}` → download GLB). Primeiro teste local falhou com **CORS** — a Tripo não permite chamada direta do browser.
+- **Solução**: criada **Vercel Edge Function** em `api/tripo/[...path].js` que faz proxy de qualquer rota `/api/tripo/*` pra `https://api.tripo3d.ai/v2/openapi/*`, injetando a `TRIPO_API_KEY` server-side. **Quebra parcial da regra "sem backend"** do CLAUDE.md — agora tem 1 função serverless. Trade-off aceito.
+- **Arquivos**:
+  - **Novo**: `api/tripo/[...path].js` (Edge runtime, ~70 linhas, suporta streaming pro GLB).
+  - **Novo**: `.env.local.example` (template).
+  - **`js/api.js`**: `callTripoAPI()` agora bate em `/api/tripo` (relativo) e não manda mais header Authorization (o proxy injeta). `gerar3DTripo()` não checa mais `CONFIG.TRIPO_API_KEY` — só `isMockMode()` decide entre mock e real.
+  - **`.gitignore`**: adicionado `.vercel/`, `.env`, `.env.local`.
+- **Como rodar local**: `vercel dev` (em vez de `npx serve`) com `.env.local` contendo `TRIPO_API_KEY=...`.
+- **Como rodar prod**: configurar `TRIPO_API_KEY` no painel do Vercel (Settings → Environment Variables).
+- **Fase 1 (smoke test)**: só passa `face_limit` (mapeado do polycount da UI). Versão do modelo, formato OBJ/FBX, mesh resolution, etc. ainda não estão sendo enviados — Fase 2.
+- **Limitação conhecida**: API só devolve `.glb`. Se o usuário escolher OBJ/FBX na UI, o arquivo vai sair com extensão errada mas conteúdo GLB. Fase 2 resolve.
 
 ## Estado atual
 
@@ -185,7 +199,7 @@ Os 8 presets manuais e regras de match estão documentados em [`PROMPTS_3D_CHARA
 1. Renomear 7 .jpg da Biblioteca A pros IDs corretos (lista no `HANDOFF.md`).
 2. ~~Preencher prompts do 3D Character Flow~~ ✅ **12/12 concluído** — todos os prompts definitivos preenchidos.
 3. Validar nome do modelo OpenAI (`gpt-image-2` vs `gpt-image-1`).
-4. Substituir stub `callTripoAPI()` pela integração real da STLFLIX.
+4. ~~Substituir stub `callTripoAPI()` pela integração real~~ ✅ **Implementado via proxy Vercel** (12/05/2026). Falta o smoke test passar end-to-end.
 
 ## Pendências secundárias
 
@@ -211,9 +225,20 @@ appState.threeDFlowOptions = {
 
 ## Como rodar local
 
+Pra usar **apenas mock mode** (sem chamar APIs externas):
+
 ```powershell
 cd C:\projetos_claude\stlai-asset-generator
 npx serve
+```
+
+Pra usar a **integração real da Tripo** (precisa do proxy `/api/tripo/*`):
+
+```powershell
+cd C:\projetos_claude\stlai-asset-generator
+# Pré-requisito: TRIPO_API_KEY em .env.local (copia de .env.local.example)
+# Pré-requisito: vercel CLI instalado (npm i -g vercel)
+vercel dev
 ```
 
 ## Fluxo de trabalho

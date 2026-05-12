@@ -14,4 +14,13 @@ node_modules/
 outputs-locais/
 *.zip
 
-# NOTA: As API keys ficam no localStorage 
+# Vercel
+.vercel/
+.env
+.env.local
+.env*.local
+
+# NOTA: A key da OpenAI ainda fica no localStorage do front.
+# A TRIPO_API_KEY agora fica em .env.local (local) ou env var do Vercel (prod).
+
+.vercel
